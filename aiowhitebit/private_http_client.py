@@ -1,4 +1,4 @@
-__all__ = ["AiowhitebitPrivateClient"]
+__all__ = ["AioWhitebitPrivateClient"]
 
 import base64
 import hashlib
@@ -41,7 +41,7 @@ from .converters import (
 from .exceptions import handle_errors
 
 
-class AiowhitebitPrivateClient:
+class AioWhitebitPrivateClient:
     def __init__(
         self,
         api_key: str = API_KEY,
@@ -138,60 +138,78 @@ class AiowhitebitPrivateClient:
         req: CreateLimitOrderRequest,
     ) -> CreateOrderResponse:
         request_path = "/api/v4/order/new"
-        return await self.create_base_orders(request_path, req, convert_order_response_to_dto)
+        return await self.create_base_orders(
+            request_path, req, convert_order_response_to_dto
+        )
 
     async def create_stock_market_order(
         self,
         req: CreateStockMarketOrderRequest,
     ) -> CreateOrderResponse:
         request_path = "/api/v4/order/stock_market"
-        return await self.create_base_orders(request_path, req, convert_order_response_to_dto)
+        return await self.create_base_orders(
+            request_path, req, convert_order_response_to_dto
+        )
 
     async def create_stop_limit_order(
         self,
         req: CreateStopLimitOrderRequest,
     ) -> CreateOrderResponse:
         request_path = "/api/v4/order/stop_limit"
-        return await self.create_base_orders(request_path, req, convert_order_response_to_dto)
+        return await self.create_base_orders(
+            request_path, req, convert_order_response_to_dto
+        )
 
     async def create_stop_market_order(
         self,
         req: CreateStopMarketOrderRequest,
     ) -> CreateOrderResponse:
         request_path = "/api/v4/order/stop_market"
-        return await self.create_base_orders(request_path, req, convert_order_response_to_dto)
+        return await self.create_base_orders(
+            request_path, req, convert_order_response_to_dto
+        )
 
     async def cancel_order(
         self,
         req: CancelOrderRequest,
     ) -> CancelOrderResponse:
         request_path = "/api/v4/order/cancel"
-        return await self.create_base_orders(request_path, req, convert_cancel_order_to_dto)
+        return await self.create_base_orders(
+            request_path, req, convert_cancel_order_to_dto
+        )
 
     async def active_orders(
         self,
         req: ActiveOrdersRequest,
     ) -> List[CreateOrderResponse]:
         request_path = "/api/v4/orders"
-        return await self.create_base_orders(request_path, req, convert_active_orders_to_dto)
+        return await self.create_base_orders(
+            request_path, req, convert_active_orders_to_dto
+        )
 
     async def executed_order_history(
         self,
         req: ExecutedOrderHistoryRequest,
     ) -> ExecutedOrdersResponse:
         request_path = "/api/v4/trade-account/executed-history"
-        return await self.create_base_orders(request_path, req, convert_executed_orders_to_dto)
+        return await self.create_base_orders(
+            request_path, req, convert_executed_orders_to_dto
+        )
 
     async def executed_order_deals(
         self,
         req: ExecutedOrderDealsRequest,
     ) -> ExecutedDealsResponse:
         request_path = "/api/v4/trade-account/order"
-        return await self.create_base_orders(request_path, req, convert_executed_deals_to_dto)
+        return await self.create_base_orders(
+            request_path, req, convert_executed_deals_to_dto
+        )
 
     async def executed_orders_by_market(
         self,
         req: ExecutedOrdersByMarket,
     ) -> ExecutedOrdersByMarketResponse:
         request_path = "/api/v4/trade-account/order/history"
-        return await self.create_base_orders(request_path, req, convert_executed_orders_by_market_to_dto)
+        return await self.create_base_orders(
+            request_path, req, convert_executed_orders_by_market_to_dto
+        )

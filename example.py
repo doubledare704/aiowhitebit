@@ -1,11 +1,11 @@
 import asyncio
 
-from aiowhitebit.private_http_client import AiowhitebitPrivateClient
 from aiowhitebit.http_data_models import CreateLimitOrderRequest
+from aiowhitebit.private_http_client import AioWhitebitPrivateClient
 
 
 async def main():
-    client = AiowhitebitPrivateClient()
+    client = AioWhitebitPrivateClient()
     res = await client.get_trading_balance("XTZ")
     print(res)
     await asyncio.sleep(1)

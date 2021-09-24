@@ -1,6 +1,7 @@
 import os
 
 BASE_URL = "https://whitebit.com"
+BASE_WS_PUBLIC_URL = "wss://api.whitebit.com/ws"
 API_KEY = os.environ.get("API_KEY")
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
