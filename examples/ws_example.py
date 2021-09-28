@@ -1,10 +1,13 @@
 import asyncio
 import logging
 
-from aiowhitebit.clients.public_ws_client import WhitebitPublicWSClient, get_ws_public_client
+from aiowhitebit.clients.public_ws_client import (
+    WhitebitPublicWSClient,
+    get_ws_public_client,
+)
 
 logging.basicConfig()
-logging.getLogger('ws_client').setLevel(logging.INFO)
+logging.getLogger("ws_client").setLevel(logging.INFO)
 
 
 async def main():
@@ -31,5 +34,5 @@ async def main():
         await asyncio.create_task(ws_client.close())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     asyncio.run(main())

@@ -54,10 +54,10 @@ class SubscribeRequest:
 
     @staticmethod
     def depth_subscribe(
-            market: str,
-            limit: int = 100,
-            price_intervals: str = "0",
-            multiple_sub: bool = True,
+        market: str,
+        limit: int = 100,
+        price_intervals: str = "0",
+        multiple_sub: bool = True,
     ) -> dict:
         """
         :param multiple_sub:
