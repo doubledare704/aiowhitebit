@@ -1,4 +1,4 @@
-from aiowhitebit.public_ws_subscriber import ws_subscribe_builder, SubscribeRequest
+from aiowhitebit.clients.public_ws_subscriber import ws_subscribe_builder, SubscribeRequest
 
 if __name__ == '__main__':
     import threading

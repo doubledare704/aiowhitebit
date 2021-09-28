@@ -28,8 +28,8 @@ from aiowhitebit.http_data_models import (
     ExecutedOrdersByMarket,
     ExecutedOrdersByMarketResponse,
 )
-from .constants import BASE_URL, API_KEY, SECRET_KEY
-from .converters import (
+from aiowhitebit.constants import BASE_URL, API_KEY, SECRET_KEY
+from aiowhitebit.converters import (
     convert_executed_deals_to_dto,
     convert_executed_orders_by_market_to_dto,
     convert_executed_orders_to_dto,
@@ -38,7 +38,7 @@ from .converters import (
     convert_order_response_to_dto,
     convert_get_trading_balance_to_dto,
 )
-from .exceptions import handle_errors
+from aiowhitebit.exceptions import handle_errors
 
 
 class AioWhitebitPrivateClient:

@@ -1,7 +1,7 @@
 import asyncio
 
 from aiowhitebit.http_data_models import CreateLimitOrderRequest
-from aiowhitebit.private_http_client import AioWhitebitPrivateClient
+from aiowhitebit.clients.private_http_client import AioWhitebitPrivateClient
 
 
 async def main():

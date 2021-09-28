@@ -1,7 +1,7 @@
 import asyncio
 import logging
 
-from aiowhitebit.public_ws_client import WhitebitPublicWSClient, get_ws_public_client
+from aiowhitebit.clients.public_ws_client import WhitebitPublicWSClient, get_ws_public_client
 
 logging.basicConfig()
 logging.getLogger('ws_client').setLevel(logging.INFO)
