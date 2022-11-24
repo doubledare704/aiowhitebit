@@ -1,7 +1,7 @@
-aiohttp==3.7.4.post0
+aiohttp==3.8.3
 cchardet==2.1.7
 aiodns==3.0.0
-uvloop==0.16.0
-pydantic==1.8.2
+uvloop==0.17.0
+pydantic==1.10.2
 websockets~=10.0
-websocket-client~=1.2.1
+websocket-client==1.4.2
