@@ -18,8 +18,17 @@ __all__ = [
     "OrderDepthV1",
     "TradeHistoryItem",
     "TradeHistoryV1",
+    "MarketInfoV2",
+    "TickerItemV2",
+    "TickersV2",
+    "RecentTradesV2",
+    "FeeV2",
+    "AssetStatusV2",
+    "AssetItemV2",
+    "OrderDepthV2",
 ]
 
+from datetime import datetime
 from decimal import Decimal
 from typing import List, Optional, Any
 
@@ -161,3 +170,78 @@ class TradeHistoryItem(BaseModel):
 
 class TradeHistoryV1(BasePublicV1):
     result: List[TradeHistoryItem]
+
+
+class MarketItemV2(BaseModel):
+    name: str
+    stock: str
+    money: str
+    stockPrec: int
+    moneyPrec: int
+    feePrec: int
+    makerFee: float
+    takerFee: float
+    minAmount: float
+    minTotal: float
+    tradesEnabled: bool
+
+
+class MarketInfoV2(BasePublicV1):
+    result: List[MarketItemV2]
+
+
+class TickerItemV2(BaseModel):
+    lastUpdateTimestamp: datetime
+    tradingPairs: str
+    lastPrice: float
+    lowestAsk: float
+    highestBid: float
+    baseVolume24h: float
+    quoteVolume24h: float
+    tradesEnabled: bool
+
+
+class TickersV2(BasePublicV1):
+    result: List[TickerItemV2]
+
+
+class RecentTradeItem(BaseModel):
+    tradeId: int
+    price: float
+    volume: float
+    time: datetime
+    isBuyerMaker: bool
+
+
+class RecentTradesV2(BasePublicV1):
+    result: List[RecentTradeItem]
+
+
+class FeeItem(BaseModel):
+    makerFee: float
+    takerFee: float
+
+
+class FeeV2(BasePublicV1):
+    result: FeeItem
+
+
+class AssetItemV2(BaseModel):
+    asset_name: str
+    id: str
+    lastUpdateTimestamp: datetime
+    name: str
+    canWithdraw: bool
+    canDeposit: bool
+    minWithdrawal: float
+    maxWithdrawal: float
+    makerFee: float
+    takerFee: float
+
+
+class AssetStatusV2(BasePublicV1):
+    result: List[AssetItemV2]
+
+
+class OrderDepthV2(OrderDepthV1):
+    lastUpdateTimestamp: datetime

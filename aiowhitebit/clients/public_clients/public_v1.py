@@ -1,9 +1,6 @@
 __all__ = ["AioWhitebitPublicV1Client"]
 
-from typing import Dict
-
-import aiohttp
-
+from aiowhitebit.clients.public_clients.base import base_get_request
 from aiowhitebit.clients.public_clients.converters import (
     convert_tickers_to_object,
     convert_kline_to_object,
@@ -20,21 +17,12 @@ from aiowhitebit.http_data_models.response_models import (
 )
 
 
-async def base_get_request(url) -> Dict:
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as r:
-            return await r.json()
-
-
 class AioWhitebitPublicV1Client:
     def __init__(
             self,
             base_url: str = BASE_URL,
     ) -> None:
         self.base_url = base_url
-        self.payload = None
-        self.signature = None
-        self.session = None
 
     def request_url(self, path) -> str:
         return f"{self.base_url}{path}"
