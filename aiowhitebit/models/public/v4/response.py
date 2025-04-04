@@ -1,6 +1,5 @@
 """Response models for the WhiteBit Public API v4."""
 
-from datetime import datetime
 from typing import List, Dict, Any, Optional, Union
 
 from pydantic import BaseModel, Field
@@ -114,6 +113,7 @@ class MarketActivity(Dict[str, MarketActivityItem]):
 
 class MinLimit(BaseModel):
     """Minimum limit model"""
+
     min: str
 
     class Config:
@@ -123,6 +123,7 @@ class MinLimit(BaseModel):
 
 class NetworkTypeLimit(BaseModel):
     """Network type specific limits (e.g., ERC20)"""
+
     ERC20: MinLimit
 
     class Config:
@@ -132,6 +133,7 @@ class NetworkTypeLimit(BaseModel):
 
 class Limits(BaseModel):
     """Limits model for v4 API"""
+
     deposit: NetworkTypeLimit
     withdraw: NetworkTypeLimit
 
@@ -142,6 +144,7 @@ class Limits(BaseModel):
 
 class Networks(BaseModel):
     """Networks model for v4 API"""
+
     default: Optional[str] = None  # e.g. "ERC20"
     deposits: Optional[List[str]] = []  # e.g. ["ERC20"]
     withdraws: Optional[List[str]] = []  # e.g. ["ERC20"]
@@ -153,6 +156,7 @@ class Networks(BaseModel):
 
 class Asset(BaseModel):
     """Asset model for v4 API"""
+
     name: str  # e.g. "1inch"
     unified_cryptoasset_id: int  # e.g. 8104
     can_withdraw: bool  # e.g. True
@@ -177,6 +181,7 @@ class Asset(BaseModel):
 
 class AssetStatus(Dict[str, Asset]):
     """Asset status response model for v4 API"""
+
     pass
 
 
@@ -512,6 +517,7 @@ class FuturesMarkets(BaseResponse):
 
 class MiningPoolHashRate(BaseModel):
     """Mining pool hash rate model"""
+
     timestamp: int
     hashrate: str
 
@@ -522,6 +528,7 @@ class MiningPoolHashRate(BaseModel):
 
 class MiningPoolBlock(BaseModel):
     """Mining pool block model"""
+
     blockFoundAt: int
     blockHeight: int
 
@@ -532,6 +539,7 @@ class MiningPoolBlock(BaseModel):
 
 class MiningPoolData(BaseModel):
     """Mining pool data model"""
+
     assets: List[str]
     blocks: List[MiningPoolBlock]
     connectionLinks: List[str]
@@ -548,6 +556,7 @@ class MiningPoolData(BaseModel):
 
 class MiningPoolOverview(BaseModel):
     """Mining pool overview response model"""
+
     data: MiningPoolData
 
     class Config:

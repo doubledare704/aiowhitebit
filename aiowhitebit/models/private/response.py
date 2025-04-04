@@ -5,8 +5,6 @@ from typing import List, Dict, Any
 
 from pydantic import BaseModel
 
-from aiowhitebit.models.base import BasePrivateResponse
-
 
 class TradingBalanceItem(BaseModel):
     """Trading balance item model.

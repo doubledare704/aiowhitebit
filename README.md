@@ -10,12 +10,6 @@ Async client for WhiteBit API
 * [Public http v1](https://github.com/whitebit-exchange/api-docs/blob/main/docs/Public/http-v1.md)
 * [Public http v2](https://github.com/whitebit-exchange/api-docs/blob/main/docs/Public/http-v2.md)
 
-## Installation
-
-```bash
-pip install aiowhitebit
-```
-
 ## Development
 
 ### Setup

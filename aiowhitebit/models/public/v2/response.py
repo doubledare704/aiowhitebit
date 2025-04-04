@@ -6,7 +6,7 @@ from typing import List
 from pydantic import BaseModel
 
 from aiowhitebit.models.base import BasePublicV2Response
-from aiowhitebit.models.public.v1.response import OrderDepth, OrderDepthItem
+from aiowhitebit.models.public.v1.response import OrderDepth
 
 
 class Market(BaseModel):

@@ -1,7 +1,7 @@
 """Request models for the WhiteBit WebSocket API."""
 
 import time
-from typing import List, Any, Optional
+from typing import List, Any
 
 from pydantic import BaseModel, validator
 

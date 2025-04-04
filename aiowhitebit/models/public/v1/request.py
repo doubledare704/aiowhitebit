@@ -1,8 +1,8 @@
 """Request models for the WhiteBit Public API v1."""
 
-from typing import Optional, List
+from typing import Optional
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, validator
 
 
 class KlineRequest(BaseModel):

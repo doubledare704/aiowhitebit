@@ -8,7 +8,6 @@ from aiowhitebit.converters.public import (
     convert_order_depth_to_object_v1,
 )
 from aiowhitebit.models.public.v1 import (
-    Market,
     MarketInfo,
     Tickers,
     MarketSingleResponse,
