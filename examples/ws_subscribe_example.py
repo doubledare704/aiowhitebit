@@ -1,7 +1,13 @@
-from aiowhitebit.clients.public_ws_subscriber import (
+from aiowhitebit.clients.websocket import (
     ws_subscribe_builder,
     SubscribeRequest,
 )
+
+# For backward compatibility, you can also use:
+# from aiowhitebit.clients.public_ws_subscriber import (
+#     ws_subscribe_builder,
+#     SubscribeRequest,
+# )
 
 if __name__ == "__main__":
     import threading
@@ -17,8 +23,6 @@ if __name__ == "__main__":
     ]
 
     for item in possible_sub_requests:
-        current_thread = threading.Thread(
-            target=ws_subscribe_builder, args=(item,), daemon=True
-        )
+        current_thread = threading.Thread(target=ws_subscribe_builder, args=(item,), daemon=True)
         current_thread.start()
     input("Hit enter to terminate...\n")

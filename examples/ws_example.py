@@ -1,17 +1,25 @@
 import asyncio
 import logging
 
-from aiowhitebit.clients.public_ws_client import (
-    WhitebitPublicWSClient,
-    get_ws_public_client,
+from aiowhitebit.clients.websocket import (
+    PublicWebSocketClient,
+    get_public_websocket_client,
 )
+
+# For backward compatibility, you can also use:
+# from aiowhitebit.clients.public_ws_client import (
+#     WhitebitPublicWSClient,
+#     get_ws_public_client,
+# )
 
 logging.basicConfig()
 logging.getLogger("ws_client").setLevel(logging.INFO)
 
 
 async def main():
-    ws_client: WhitebitPublicWSClient = get_ws_public_client()
+    ws_client = get_public_websocket_client()
+    # For backward compatibility, you can also use:
+    # ws_client = get_ws_public_client()
     try:
         resp = await ws_client.ping()
         print(resp)

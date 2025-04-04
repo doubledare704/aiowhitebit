@@ -1,10 +1,15 @@
 import asyncio
 
-from aiowhitebit.clients.public_clients.public_v2 import AioWhitebitPublicV2Client
+from aiowhitebit.clients.public import PublicV2Client
+
+# For backward compatibility, you can also use:
+# from aiowhitebit.clients.public_clients import AioWhitebitPublicV2Client
 
 
 async def main():
-    client = AioWhitebitPublicV2Client()
+    client = PublicV2Client()
+    # For backward compatibility, you can also use:
+    # client = AioWhitebitPublicV2Client()
     res = await client.get_market_info()
 
     res = await client.get_tickers()

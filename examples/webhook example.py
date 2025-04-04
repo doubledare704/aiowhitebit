@@ -1,7 +1,7 @@
 from aiohttp import web
 
-from aiowhitebit.clients.webhook_client import get_webhook_data_loader
-from aiowhitebit.webhook_models import WebhookRequest
+from aiowhitebit.clients.webhook.webhook_client import get_webhook_data_loader
+from aiowhitebit.models.webhook import WebhookRequest
 
 
 async def handle_webhook(request: web.Request):
