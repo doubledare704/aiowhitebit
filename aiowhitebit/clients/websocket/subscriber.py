@@ -3,7 +3,7 @@
 import json
 import pprint
 from datetime import datetime
-from typing import List, Callable
+from typing import Callable, List
 
 import websocket
 

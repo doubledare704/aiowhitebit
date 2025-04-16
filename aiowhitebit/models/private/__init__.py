@@ -1,23 +1,23 @@
 """Private API models."""
 
 from aiowhitebit.models.private.request import (
-    OrderType,
+    ActiveOrdersRequest,
+    CancelOrderRequest,
     CreateLimitOrderRequest,
     CreateStockMarketOrderRequest,
     CreateStopLimitOrderRequest,
     CreateStopMarketOrderRequest,
-    CancelOrderRequest,
-    ActiveOrdersRequest,
-    ExecutedOrderHistoryRequest,
     ExecutedOrderDealsRequest,
+    ExecutedOrderHistoryRequest,
     ExecutedOrdersByMarket,
+    OrderType,
 )
 from aiowhitebit.models.private.response import (
-    TradingBalanceItem,
-    TradingBalanceList,
-    CreateOrderResponse,
     CancelOrderResponse,
-    ExecutedOrdersResponse,
+    CreateOrderResponse,
     ExecutedDealsResponse,
     ExecutedOrdersByMarketResponse,
+    ExecutedOrdersResponse,
+    TradingBalanceItem,
+    TradingBalanceList,
 )

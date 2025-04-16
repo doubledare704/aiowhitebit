@@ -1,13 +1,14 @@
 import pytest
+
 from aiowhitebit.clients.public import PublicV1Client
 from aiowhitebit.exceptions import WhitebitValidationError
 from aiowhitebit.models.public.v1 import (
-    MarketInfo,
-    Tickers,
-    MarketSingleResponse,
     Kline,
-    Symbols,
+    MarketInfo,
+    MarketSingleResponse,
     OrderDepth,
+    Symbols,
+    Tickers,
     TradeHistory,
 )
 

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "aiowhitebit"
-version = "0.1.2"  # Increment version number
+version = "0.1.4"
 description = "Async Python client for WhiteBit API"
 readme = "README.md"
 authors = [
@@ -39,21 +39,62 @@ Documentation = "https://github.com/doubeldare704/aiowhitebit#readme"
 Repository = "https://github.com/doubeldare704/aiowhitebit.git"
 Issues = "https://github.com/doubeldare704/aiowhitebit/issues"
 
-[tool.black]
+[tool.ruff]
 line-length = 120
-target-version = ['py39']
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-)/
-'''
+target-version = "py39"
+extend-exclude = ["examples"]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "C",    # flake8-comprehensions
+    "B",    # flake8-bugbear
+    "UP",   # pyupgrade
+    "D",    # pydocstyle
+    "N",    # pep8-naming
+    "ASYNC", # flake8-async
+    "S",    # flake8-bandit
+    "RUF",  # Ruff-specific rules
+]
+ignore = [
+    "D203",  # one-blank-line-before-class
+    "D212",  # multi-line-summary-first-line
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "S101",    # Use of assert detected
+    "D100",    # Missing docstring in public module
+    "D101",    # Missing docstring in public class
+    "D102",    # Missing docstring in public method
+    "D103",    # Missing docstring in public function
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.pyright]
+include = ["aiowhitebit"]
+exclude = [
+    "**/node_modules",
+    "**/__pycache__",
+    "tests",
+    "examples"
+]
+typeCheckingMode = "basic"
+useLibraryCodeForTypes = true
+reportMissingImports = true
+reportMissingTypeStubs = false
+pythonVersion = "3.9"
+strictListInference = true
+strictDictionaryInference = true
+strictSetInference = true

@@ -1,6 +1,9 @@
 """Request models for the WhiteBit Public API v2."""
 
-from pydantic import BaseModel, validator
+try:
+    from pydantic.v1 import BaseModel, validator  # For Pydantic v2
+except ImportError:
+    from pydantic import BaseModel, validator  # For Pydantic v1
 
 
 class RecentTradesRequest(BaseModel):
@@ -21,7 +24,15 @@ class RecentTradesRequest(BaseModel):
     class Config:
         """Pydantic model configuration"""
 
-        frozen = True  # Makes the model immutable
+        frozen = True
+
+        # Add compatibility for both v1 and v2
+        try:
+            from pydantic.v1 import Extra
+
+            extra = Extra.forbid
+        except ImportError:
+            extra = "forbid"
 
 
 class OrderDepthRequest(BaseModel):

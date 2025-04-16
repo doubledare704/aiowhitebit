@@ -1,6 +1,6 @@
 from aiowhitebit.clients.websocket import (
-    ws_subscribe_builder,
     SubscribeRequest,
+    ws_subscribe_builder,
 )
 
 # For backward compatibility, you can also use:

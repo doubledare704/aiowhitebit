@@ -1,16 +1,16 @@
 import unittest
+from datetime import datetime
 
 import pytest
-from datetime import datetime
 
 from aiowhitebit.clients.public import PublicV2Client
 from aiowhitebit.models.public.v2 import (
-    MarketInfo,
-    Tickers,
-    RecentTrades,
-    FeeResponse,
     AssetStatus,
+    FeeResponse,
+    MarketInfo,
     OrderDepthV2,
+    RecentTrades,
+    Tickers,
 )
 
 

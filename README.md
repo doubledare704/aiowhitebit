@@ -29,11 +29,11 @@ from aiowhitebit.clients.public import PublicV4Client
 
 async def main():
     client = PublicV4Client()
-    
+
     # Get market info
     markets = await client.get_market_info()
     print(f"Number of markets: {len(markets)}")
-    
+
     # Get market activity
     activity = await client.get_market_activity()
     print(f"BTC_USDT last price: {activity.get('BTC_USDT').last_price}")

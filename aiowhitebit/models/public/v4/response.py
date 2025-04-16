@@ -1,8 +1,8 @@
 """Response models for the WhiteBit Public API v4."""
 
-from typing import List, Dict, Any, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from aiowhitebit.models.base import BaseResponse
 
@@ -14,13 +14,18 @@ class MaintenanceStatus(BaseModel):
         status: 1 - system operational, 0 - system maintenance
     """
 
-    status: str
+    status: Union[str, int]
+
+    @field_validator('status')
+    def validate_status(cls, v):
+        """Convert any status to string for consistency."""
+        return str(v)
 
     class Config:
         """Pydantic model configuration"""
 
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+        frozen = True
+        extra = "ignore"
 
 
 class Market(BaseModel):

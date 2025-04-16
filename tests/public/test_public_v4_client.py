@@ -4,19 +4,19 @@ import pytest
 
 from aiowhitebit.clients.public import PublicV4Client
 from aiowhitebit.models.public.v4 import (
-    MaintenanceStatus,
-    MarketInfo,
-    MarketActivity,
     AssetStatus,
-    Orderbook,
-    Depth,
-    RecentTrades,
-    FeeResponse,
-    ServerTime,
-    ServerStatus,
     CollateralMarkets,
+    Depth,
+    FeeResponse,
     FuturesMarkets,
+    MaintenanceStatus,
+    MarketActivity,
+    MarketInfo,
     MiningPoolOverview,
+    Orderbook,
+    RecentTrades,
+    ServerStatus,
+    ServerTime,
 )
 
 

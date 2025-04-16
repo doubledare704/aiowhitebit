@@ -5,7 +5,6 @@ from aiowhitebit.clients.websocket import (
     get_public_websocket_client,
 )
 
-
 logging.basicConfig()
 logging.getLogger("ws_client").setLevel(logging.INFO)
 

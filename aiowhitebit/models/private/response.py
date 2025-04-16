@@ -1,7 +1,7 @@
 """Response models for the WhiteBit Private API."""
 
 from decimal import Decimal
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 from pydantic import BaseModel
 

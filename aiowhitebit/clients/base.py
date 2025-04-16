@@ -1,13 +1,14 @@
 """Base client functionality for the WhiteBit API."""
+
 from asyncio import Semaphore
-from typing import Any, Optional, TypeVar, Callable
+from typing import Any, Callable, Optional, TypeVar
 
 import aiohttp
 
 from aiowhitebit.constants import BASE_URL
 from aiowhitebit.exceptions import WhitebitAPIError
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class HTTPClient:
@@ -50,13 +51,7 @@ class BaseClient(HTTPClient):
     def request_url(self, path: str) -> str:
         return f"{self.base_url}{path}"
 
-    async def _make_request(
-            self,
-            path: str,
-            converter: Optional[Callable[[dict], T]] = None
-    ) -> T:
+    async def _make_request(self, path: str, converter: Optional[Callable[[dict], T]] = None) -> T:
         full_url = self.request_url(path)
         json_obj = await self.get(full_url)
         return converter(json_obj) if converter else json_obj
-
-

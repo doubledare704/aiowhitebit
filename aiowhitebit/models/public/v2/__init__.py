@@ -1,19 +1,19 @@
 """Public API v2 models."""
 
 from aiowhitebit.models.public.v2.request import (
-    RecentTradesRequest,
     OrderDepthRequest,
+    RecentTradesRequest,
 )
 from aiowhitebit.models.public.v2.response import (
-    Market,
-    MarketInfo,
-    Ticker,
-    Tickers,
-    RecentTrade,
-    RecentTrades,
-    Fee,
-    FeeResponse,
     Asset,
     AssetStatus,
+    Fee,
+    FeeResponse,
+    Market,
+    MarketInfo,
     OrderDepthV2,
+    RecentTrade,
+    RecentTrades,
+    Ticker,
+    Tickers,
 )

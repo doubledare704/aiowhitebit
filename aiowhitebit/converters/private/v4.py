@@ -1,15 +1,15 @@
 """Converters for the WhiteBit Private API v4."""
 
-from typing import List, Union, Optional
+from typing import List, Optional, Union
 
 from aiowhitebit.models.private.response import (
-    TradingBalanceItem,
-    TradingBalanceList,
-    CreateOrderResponse,
     CancelOrderResponse,
-    ExecutedOrdersResponse,
+    CreateOrderResponse,
     ExecutedDealsResponse,
     ExecutedOrdersByMarketResponse,
+    ExecutedOrdersResponse,
+    TradingBalanceItem,
+    TradingBalanceList,
 )
 
 

@@ -10,12 +10,12 @@ import hashlib
 import hmac
 import json
 import logging
-from typing import Optional, Dict, Callable, Any
+from typing import Any, Callable, Dict, Optional
 
 from multidict import CIMultiDictProxy
 
 from aiowhitebit.constants import WEBHOOK_KEY, WEBHOOK_SECRET_KEY
-from aiowhitebit.models.webhook import WebhookRequest, TransactionParams, CodeApplyParams
+from aiowhitebit.models.webhook import CodeApplyParams, TransactionParams, WebhookRequest
 
 
 class WebhookDataLoader:

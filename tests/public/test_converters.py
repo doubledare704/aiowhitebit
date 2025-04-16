@@ -1,11 +1,11 @@
 import unittest
 
 from aiowhitebit.converters.public import (
-    convert_tickers_to_object_v1,
     convert_kline_to_object_v1,
     convert_order_depth_to_object_v1,
+    convert_tickers_to_object_v1,
 )
-from aiowhitebit.models.public.v1 import Tickers, Kline, OrderDepth
+from aiowhitebit.models.public.v1 import Kline, OrderDepth, Tickers
 
 
 class TestConverters(unittest.TestCase):

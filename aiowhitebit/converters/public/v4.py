@@ -1,12 +1,12 @@
 """Converters for the WhiteBit Public API v4."""
 
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 from aiowhitebit.models.public.v4.response import (
+    Asset,
+    AssetStatus,
     MarketActivity,
     MarketActivityItem,
-    AssetStatus,
-    Asset,
     Orderbook,
     RecentTrade,
     RecentTrades,

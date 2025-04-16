@@ -1,19 +1,19 @@
 """WhiteBit Public API v2 client."""
 
 from aiowhitebit.clients.base import BaseClient
-from aiowhitebit.constants import BASE_URL
 from aiowhitebit.config import APIEndpoints
+from aiowhitebit.constants import BASE_URL
 from aiowhitebit.converters.public import (
     convert_asset_status_to_object,
     convert_order_depth_to_object_v2,
 )
 from aiowhitebit.models.public.v2 import (
-    MarketInfo,
-    Tickers,
-    RecentTrades,
-    FeeResponse,
     AssetStatus,
+    FeeResponse,
+    MarketInfo,
     OrderDepthV2,
+    RecentTrades,
+    Tickers,
 )
 
 
@@ -52,10 +52,7 @@ class PublicV2Client(BaseClient):
             markets = await client.get_market_info()
             ```
         """
-        return await self._make_request(
-            APIEndpoints.MARKET_INFO_V2,
-            converter=lambda x: MarketInfo(**x)
-        )
+        return await self._make_request(APIEndpoints.MARKET_INFO_V2, converter=lambda x: MarketInfo(**x))
 
     async def get_tickers(self) -> Tickers:
         """Get information about recent trading activity on all markets
@@ -72,10 +69,7 @@ class PublicV2Client(BaseClient):
             tickers = await client.get_tickers()
             ```
         """
-        return await self._make_request(
-            APIEndpoints.TICKER_V2,
-            converter=lambda x: Tickers(**x)
-        )
+        return await self._make_request(APIEndpoints.TICKER_V2, converter=lambda x: Tickers(**x))
 
     async def get_recent_trades(self, market: str) -> RecentTrades:
         """Get recent trades for the requested market
@@ -99,8 +93,7 @@ class PublicV2Client(BaseClient):
             raise ValueError("Market parameter is required")
 
         return await self._make_request(
-            APIEndpoints.RECENT_TRADES_V2.format(market=market),
-            converter=lambda x: RecentTrades(**x)
+            APIEndpoints.RECENT_TRADES_V2.format(market=market), converter=lambda x: RecentTrades(**x)
         )
 
     async def get_fee(self) -> FeeResponse:
@@ -118,10 +111,7 @@ class PublicV2Client(BaseClient):
             fee = await client.get_fee()
             ```
         """
-        return await self._make_request(
-            APIEndpoints.FEE_V2,
-            converter=lambda x: FeeResponse(**x)
-        )
+        return await self._make_request(APIEndpoints.FEE_V2, converter=lambda x: FeeResponse(**x))
 
     async def get_asset_status_list(self) -> AssetStatus:
         """Get asset status list
@@ -138,10 +128,7 @@ class PublicV2Client(BaseClient):
             asset_status = await client.get_asset_status_list()
             ```
         """
-        return await self._make_request(
-            APIEndpoints.ASSET_STATUS_V2,
-            converter=convert_asset_status_to_object
-        )
+        return await self._make_request(APIEndpoints.ASSET_STATUS_V2, converter=convert_asset_status_to_object)
 
     async def get_order_depth(self, market: str) -> OrderDepthV2:
         """Get the current order book as two arrays (bids / asks)
@@ -165,6 +152,5 @@ class PublicV2Client(BaseClient):
             raise ValueError("Market parameter is required")
 
         return await self._make_request(
-            APIEndpoints.DEPTH_V2.format(market=market),
-            converter=convert_order_depth_to_object_v2
+            APIEndpoints.DEPTH_V2.format(market=market), converter=convert_order_depth_to_object_v2
         )

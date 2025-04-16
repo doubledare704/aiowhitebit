@@ -3,12 +3,12 @@
 from typing import List
 
 from aiowhitebit.models.public.v1.response import (
+    Kline,
+    KlineItem,
+    OrderDepth,
+    OrderDepthItem,
     Ticker,
     Tickers,
-    KlineItem,
-    Kline,
-    OrderDepthItem,
-    OrderDepth,
 )
 
 

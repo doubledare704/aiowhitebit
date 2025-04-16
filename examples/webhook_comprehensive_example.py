@@ -6,7 +6,7 @@ import os
 from aiohttp import web
 
 from aiowhitebit.clients.webhook.webhook_client import get_webhook_data_loader
-from aiowhitebit.models.webhook import WebhookRequest, TransactionParams, CodeApplyParams
+from aiowhitebit.models.webhook import CodeApplyParams, TransactionParams, WebhookRequest
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")

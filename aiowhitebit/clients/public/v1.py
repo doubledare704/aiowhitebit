@@ -1,23 +1,24 @@
 """WhiteBit Public API v1 client."""
+
 from aiowhitebit.clients.base import BaseClient
 from aiowhitebit.config import APIEndpoints
 from aiowhitebit.converters.public import (
-    convert_tickers_to_object_v1,
     convert_kline_to_object_v1,
     convert_order_depth_to_object_v1,
+    convert_tickers_to_object_v1,
 )
+from aiowhitebit.exceptions import WhitebitValidationError
 from aiowhitebit.models.public.v1 import (
-    MarketInfo,
-    Tickers,
-    MarketSingleResponse,
     Kline,
-    Symbols,
+    MarketInfo,
+    MarketSingleResponse,
     OrderDepth,
+    Symbols,
+    Tickers,
     TradeHistory,
 )
 from aiowhitebit.utils.rate_limiting import rate_limit
 from aiowhitebit.utils.validation import validate_market
-from aiowhitebit.exceptions import WhitebitValidationError
 
 
 class PublicV1Client(BaseClient):
@@ -36,26 +37,19 @@ class PublicV1Client(BaseClient):
         This endpoint retrieves all information about available markets.
         Response is cached for 1 second.
         """
-        return await self._make_request(
-            APIEndpoints.MARKET_INFO_V1,
-            converter=lambda x: MarketInfo(**x)
-        )
+        return await self._make_request(APIEndpoints.MARKET_INFO_V1, converter=lambda x: MarketInfo(**x))
 
     @rate_limit(limit=1000, window=10.0)
     async def get_tickers(self) -> Tickers:
         """Get information about recent trading activity on all markets"""
-        return await self._make_request(
-            APIEndpoints.TICKERS_V1,
-            converter=convert_tickers_to_object_v1
-        )
+        return await self._make_request(APIEndpoints.TICKERS_V1, converter=convert_tickers_to_object_v1)
 
     @rate_limit(limit=1000, window=10.0)
     async def get_single_market(self, market: str) -> MarketSingleResponse:
         """Get information about recent trading activity on the requested market"""
         validate_market(market)
         return await self._make_request(
-            f"{APIEndpoints.TICKER_V1}?market={market}",
-            converter=lambda x: MarketSingleResponse(**x)
+            f"{APIEndpoints.TICKER_V1}?market={market}", converter=lambda x: MarketSingleResponse(**x)
         )
 
     @rate_limit(limit=1000, window=10.0)
@@ -93,35 +87,29 @@ class PublicV1Client(BaseClient):
         if params:
             query_string += "&" + "&".join(params)
 
-        return await self._make_request(
-            f"{APIEndpoints.KLINE_V1}?{query_string}",
-            converter=convert_kline_to_object_v1
-        )
+        return await self._make_request(f"{APIEndpoints.KLINE_V1}?{query_string}", converter=convert_kline_to_object_v1)
 
     @rate_limit(limit=1000, window=10.0)
     async def get_symbols(self) -> Symbols:
         """Get information about all available markets for trading"""
-        return await self._make_request(
-            APIEndpoints.SYMBOLS_V1,
-            converter=lambda x: Symbols(**x)
-        )
+        return await self._make_request(APIEndpoints.SYMBOLS_V1, converter=lambda x: Symbols(**x))
 
     @rate_limit(limit=1000, window=10.0)
     async def get_order_depth(self, market: str, limit: int = None) -> OrderDepth:
         """Get order book for the requested market
-        
+
         Args:
             market: Available market (e.g. BTC_USDT)
             limit: Limit of results. Default: 100, Max: 100
-        
+
         Returns:
             OrderDepth: Order book data
-        
+
         Raises:
             WhitebitValidationError: If market is empty or limit is invalid
         """
         validate_market(market)
-        
+
         if limit is not None and (limit < 1 or limit > 100):
             raise WhitebitValidationError("Limit must be between 1 and 100")
 
@@ -129,28 +117,25 @@ class PublicV1Client(BaseClient):
         if limit is not None:
             query_string += f"?limit={limit}"
 
-        return await self._make_request(
-            query_string,
-            converter=convert_order_depth_to_object_v1
-        )
+        return await self._make_request(query_string, converter=convert_order_depth_to_object_v1)
 
     @rate_limit(limit=1000, window=10.0)
     async def get_trade_history(self, market: str, last_id: int = None, limit: int = None) -> TradeHistory:
         """Get trade history for the requested market
-    
+
         Args:
             market: Available market (e.g. BTC_USDT)
             last_id: Return trades with ID > last_id
             limit: Limit of results. Default: 50, Max: 100
-        
+
         Returns:
             TradeHistory: Trade history data
-        
+
         Raises:
             WhitebitValidationError: If market is empty or parameters are invalid
         """
         validate_market(market)
-        
+
         if limit is not None and (limit < 1 or limit > 100):
             raise WhitebitValidationError("Limit must be between 1 and 100")
 
@@ -168,6 +153,5 @@ class PublicV1Client(BaseClient):
             query_string += "&" + "&".join(params)
 
         return await self._make_request(
-            f"{APIEndpoints.HISTORY_V1}?{query_string}",
-            converter=lambda x: TradeHistory(**x)
+            f"{APIEndpoints.HISTORY_V1}?{query_string}", converter=lambda x: TradeHistory(**x)
         )

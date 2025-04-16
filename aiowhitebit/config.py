@@ -1,4 +1,5 @@
 """Configuration for the WhiteBit API."""
+
 from dataclasses import dataclass
 from typing import Final
 

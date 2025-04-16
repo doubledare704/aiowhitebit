@@ -1,4 +1,5 @@
 import logging
+
 from aiohttp import web
 
 from aiowhitebit.clients.webhook.webhook_client import get_webhook_data_loader

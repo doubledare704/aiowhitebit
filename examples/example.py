@@ -1,7 +1,7 @@
 import asyncio
 
-from aiowhitebit.models.private import CreateLimitOrderRequest
 from aiowhitebit.clients.private import PrivateV4Client
+from aiowhitebit.models.private import CreateLimitOrderRequest
 
 # For backward compatibility, you can also use:
 # from aiowhitebit.clients.private_http_client import AioWhitebitPrivateClient

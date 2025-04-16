@@ -5,39 +5,39 @@ import hashlib
 import hmac
 import json
 import time
-from typing import Optional, Union, List, Callable
+from typing import Callable, List, Optional, Union
 
 import aiohttp
 from pydantic import BaseModel
 
-from aiowhitebit.constants import BASE_URL, API_KEY, SECRET_KEY
+from aiowhitebit.constants import API_KEY, BASE_URL, SECRET_KEY
 from aiowhitebit.converters.private import (
+    convert_active_orders_to_dto,
+    convert_cancel_order_to_dto,
     convert_executed_deals_to_dto,
     convert_executed_orders_by_market_to_dto,
     convert_executed_orders_to_dto,
-    convert_active_orders_to_dto,
-    convert_cancel_order_to_dto,
-    convert_order_response_to_dto,
     convert_get_trading_balance_to_dto,
+    convert_order_response_to_dto,
 )
 from aiowhitebit.exceptions import handle_errors
 from aiowhitebit.models.private import (
-    TradingBalanceItem,
-    TradingBalanceList,
+    ActiveOrdersRequest,
+    CancelOrderRequest,
+    CancelOrderResponse,
     CreateLimitOrderRequest,
     CreateOrderResponse,
     CreateStockMarketOrderRequest,
     CreateStopLimitOrderRequest,
     CreateStopMarketOrderRequest,
-    CancelOrderRequest,
-    CancelOrderResponse,
-    ActiveOrdersRequest,
-    ExecutedOrderHistoryRequest,
-    ExecutedOrdersResponse,
-    ExecutedOrderDealsRequest,
     ExecutedDealsResponse,
+    ExecutedOrderDealsRequest,
+    ExecutedOrderHistoryRequest,
     ExecutedOrdersByMarket,
     ExecutedOrdersByMarketResponse,
+    ExecutedOrdersResponse,
+    TradingBalanceItem,
+    TradingBalanceList,
 )
 
 
