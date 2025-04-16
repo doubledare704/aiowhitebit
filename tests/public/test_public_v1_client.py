@@ -1,10 +1,6 @@
-import unittest
-
 import pytest
-
 from aiowhitebit.clients.public import PublicV1Client
-
-# Use the new model imports
+from aiowhitebit.exceptions import WhitebitValidationError
 from aiowhitebit.models.public.v1 import (
     MarketInfo,
     Tickers,
@@ -16,20 +12,6 @@ from aiowhitebit.models.public.v1 import (
 )
 
 
-class TestPublicV1Client(unittest.TestCase):
-    def setUp(self):
-        self.client = PublicV1Client()
-        self.base_url = "https://whitebit.com"
-
-    def test_init(self):
-        self.assertEqual(self.client.base_url, self.base_url)
-
-    def test_request_url(self):
-        path = "/api/v1/public/markets"
-        expected_url = f"{self.base_url}{path}"
-        self.assertEqual(self.client.request_url(path), expected_url)
-
-
 class TestPublicV1ClientAsync:
     @pytest.fixture
     def client(self):
@@ -37,7 +19,7 @@ class TestPublicV1ClientAsync:
 
     @pytest.mark.asyncio
     async def test_get_market_info(self, client):
-        # Create a test client with a mocked _get_request method
+        # Mock response data
         mock_response = {
             "success": True,
             "message": None,
@@ -56,12 +38,14 @@ class TestPublicV1ClientAsync:
             ],
         }
 
-        # Create a mock for _get_request
-        async def mock_get_request(url):
+        # Create a mock for _make_request
+        async def mock_make_request(path, converter=None):
+            if converter:
+                return converter(mock_response)
             return mock_response
 
-        # Replace the _get_request method
-        client._get_request = mock_get_request
+        # Replace the _make_request method
+        client._make_request = mock_make_request
 
         # Call the method
         result = await client.get_market_info()
@@ -98,12 +82,14 @@ class TestPublicV1ClientAsync:
             },
         }
 
-        # Create a mock for _get_request
-        async def mock_get_request(url):
+        # Create a mock for _make_request
+        async def mock_make_request(path, converter=None):
+            if converter:
+                return converter(mock_response)
             return mock_response
 
-        # Replace the _get_request method
-        client._get_request = mock_get_request
+        # Replace the _make_request method
+        client._make_request = mock_make_request
 
         # Call the method
         result = await client.get_tickers()
@@ -136,12 +122,14 @@ class TestPublicV1ClientAsync:
             },
         }
 
-        # Create a mock for _get_request
-        async def mock_get_request(url):
+        # Create a mock for _make_request
+        async def mock_make_request(path, converter=None):
+            if converter:
+                return converter(mock_response)
             return mock_response
 
-        # Replace the _get_request method
-        client._get_request = mock_get_request
+        # Replace the _make_request method
+        client._make_request = mock_make_request
 
         # Call the method
         result = await client.get_single_market("BTC_USDT")
@@ -157,7 +145,7 @@ class TestPublicV1ClientAsync:
     @pytest.mark.asyncio
     async def test_get_single_market_validation(self, client):
         # Test validation for empty market parameter
-        with pytest.raises(ValueError, match="Market parameter is required"):
+        with pytest.raises(WhitebitValidationError, match="Market parameter must be a non-empty string"):
             await client.get_single_market("")
 
     @pytest.mark.asyncio
@@ -169,12 +157,14 @@ class TestPublicV1ClientAsync:
             "result": [[1631440800, "45865.62", "45958.14", "45981.3", "45750.23", "15.327634", "703140.24230131"]],
         }
 
-        # Create a mock for _get_request
-        async def mock_get_request(url):
+        # Create a mock for _make_request
+        async def mock_make_request(path, converter=None):
+            if converter:
+                return converter(mock_response)
             return mock_response
 
-        # Replace the _get_request method
-        client._get_request = mock_get_request
+        # Replace the _make_request method
+        client._make_request = mock_make_request
 
         # Call the method
         result = await client.get_kline_market("BTC_USDT", start=1596848400, end=1596927600, interval="1h", limit=100)
@@ -191,21 +181,21 @@ class TestPublicV1ClientAsync:
     @pytest.mark.asyncio
     async def test_get_kline_market_validation(self, client):
         # Test validation for empty market parameter
-        with pytest.raises(ValueError, match="Market parameter is required"):
+        with pytest.raises(WhitebitValidationError, match="Market parameter must be a non-empty string"):
             await client.get_kline_market("")
 
         # Test validation for invalid interval
-        with pytest.raises(ValueError, match="Invalid interval"):
+        with pytest.raises(WhitebitValidationError, match="Invalid interval"):
             await client.get_kline_market("BTC_USDT", interval="invalid")
 
         # Test validation for invalid limit
-        with pytest.raises(ValueError, match="Limit must be between 1 and 1440"):
+        with pytest.raises(WhitebitValidationError, match="Limit must be between 1 and 1440"):
             await client.get_kline_market("BTC_USDT", limit=0)
-        with pytest.raises(ValueError, match="Limit must be between 1 and 1440"):
+        with pytest.raises(WhitebitValidationError, match="Limit must be between 1 and 1440"):
             await client.get_kline_market("BTC_USDT", limit=1441)
 
         # Test validation for start > end
-        with pytest.raises(ValueError, match="Start time cannot be greater than end time"):
+        with pytest.raises(WhitebitValidationError, match="Start time cannot be greater than end time"):
             await client.get_kline_market("BTC_USDT", start=1596927600, end=1596848400)
 
     @pytest.mark.asyncio
@@ -213,12 +203,14 @@ class TestPublicV1ClientAsync:
         # Mock response data
         mock_response = {"success": True, "message": None, "result": ["BTC_USDT", "ETH_BTC", "ETH_USDT"]}
 
-        # Create a mock for _get_request
-        async def mock_get_request(url):
+        # Create a mock for _make_request
+        async def mock_make_request(path, converter=None):
+            if converter:
+                return converter(mock_response)
             return mock_response
 
-        # Replace the _get_request method
-        client._get_request = mock_get_request
+        # Replace the _make_request method
+        client._make_request = mock_make_request
 
         # Call the method
         result = await client.get_symbols()
@@ -240,15 +232,17 @@ class TestPublicV1ClientAsync:
             "bids": [["9427.65", "0.547909"], ["9427.3", "0.669249"]],
         }
 
-        # Create a mock for _get_request
-        async def mock_get_request(url):
+        # Create a mock for _make_request
+        async def mock_make_request(path, converter=None):
+            if converter:
+                return converter(mock_response)
             return mock_response
 
-        # Replace the _get_request method
-        client._get_request = mock_get_request
+        # Replace the _make_request method
+        client._make_request = mock_make_request
 
         # Call the method
-        result = await client.get_order_depth("BTC_USDT", limit=50)
+        result = await client.get_order_depth("BTC_USDT")
 
         # Verify the result
         assert isinstance(result, OrderDepth)
@@ -262,13 +256,13 @@ class TestPublicV1ClientAsync:
     @pytest.mark.asyncio
     async def test_get_order_depth_validation(self, client):
         # Test validation for empty market parameter
-        with pytest.raises(ValueError, match="Market parameter is required"):
+        with pytest.raises(WhitebitValidationError, match="Market parameter must be a non-empty string"):
             await client.get_order_depth("")
 
         # Test validation for invalid limit
-        with pytest.raises(ValueError, match="Limit must be between 1 and 100"):
+        with pytest.raises(WhitebitValidationError, match="Limit must be between 1 and 100"):
             await client.get_order_depth("BTC_USDT", limit=0)
-        with pytest.raises(ValueError, match="Limit must be between 1 and 100"):
+        with pytest.raises(WhitebitValidationError, match="Limit must be between 1 and 100"):
             await client.get_order_depth("BTC_USDT", limit=101)
 
     @pytest.mark.asyncio
@@ -283,12 +277,14 @@ class TestPublicV1ClientAsync:
             ],
         }
 
-        # Create a mock for _get_request
-        async def mock_get_request(url):
+        # Create a mock for _make_request
+        async def mock_make_request(path, converter=None):
+            if converter:
+                return converter(mock_response)
             return mock_response
 
-        # Replace the _get_request method
-        client._get_request = mock_get_request
+        # Replace the _make_request method
+        client._make_request = mock_make_request
 
         # Call the method
         result = await client.get_trade_history("BTC_USDT", last_id=6, limit=100)
@@ -307,9 +303,9 @@ class TestPublicV1ClientAsync:
     @pytest.mark.asyncio
     async def test_get_trade_history_validation(self, client):
         # Test validation for empty market parameter
-        with pytest.raises(ValueError, match="Market parameter is required"):
+        with pytest.raises(WhitebitValidationError, match="Market parameter must be a non-empty string"):
             await client.get_trade_history("", last_id=6)
 
         # Test validation for negative last_id
-        with pytest.raises(ValueError, match="Last ID must be a positive integer"):
+        with pytest.raises(WhitebitValidationError, match="Last ID must be a positive integer"):
             await client.get_trade_history("BTC_USDT", last_id=-1)

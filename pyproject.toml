@@ -1,6 +1,47 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "aiowhitebit"
+version = "0.1.0"
+description = "Async Python client for WhiteBit API"
+readme = "README.md"
+authors = [
+    { name = "Oleksii Ovdiienko", email = "doubledare704@gmail.com" }
+]
+license = { text = "MIT" }
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Framework :: AsyncIO",
+]
+keywords = ["whitebit", "crypto", "exchange", "api", "async", "trading"]
+dependencies = [
+    "aiohttp==3.11.16",
+    "aiodns==3.2.0",
+    "uvloop==0.21.0",
+    "pydantic==1.10.21",
+    "websockets==15.0.1",
+    "websocket-client==1.8.0",
+]
+requires-python = ">=3.9"
+
+[project.urls]
+Homepage = "https://github.com/doubeldare704/aiowhitebit"
+Documentation = "https://github.com/doubeldare704/aiowhitebit#readme"
+Repository = "https://github.com/doubeldare704/aiowhitebit.git"
+Issues = "https://github.com/doubeldare704/aiowhitebit/issues"
+
 [tool.black]
 line-length = 120
-target-version = ['py38']
+target-version = ['py39']
 include = '\.pyi?$'
 exclude = '''
 /(

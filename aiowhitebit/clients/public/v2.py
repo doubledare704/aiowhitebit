@@ -1,7 +1,8 @@
 """WhiteBit Public API v2 client."""
 
-from aiowhitebit.clients.base import base_get_request
+from aiowhitebit.clients.base import BaseClient
 from aiowhitebit.constants import BASE_URL
+from aiowhitebit.config import APIEndpoints
 from aiowhitebit.converters.public import (
     convert_asset_status_to_object,
     convert_order_depth_to_object_v2,
@@ -16,7 +17,7 @@ from aiowhitebit.models.public.v2 import (
 )
 
 
-class PublicV2Client:
+class PublicV2Client(BaseClient):
     """WhiteBit Public API v2 client
 
     This client provides methods to interact with the WhiteBit Public API v2.
@@ -34,18 +35,7 @@ class PublicV2Client:
         Args:
             base_url: Base URL for the WhiteBit API. Defaults to the official WhiteBit API URL.
         """
-        self.base_url = base_url
-
-    def request_url(self, path: str) -> str:
-        """Construct the full URL for an API endpoint
-
-        Args:
-            path: API endpoint path
-
-        Returns:
-            Full URL for the API endpoint
-        """
-        return f"{self.base_url}{path}"
+        super().__init__(base_url)
 
     async def get_market_info(self) -> MarketInfo:
         """Get information about all available markets
@@ -62,11 +52,10 @@ class PublicV2Client:
             markets = await client.get_market_info()
             ```
         """
-        request_path = "/api/v2/public/markets"
-        full_url = self.request_url(request_path)
-        json_obj = await base_get_request(full_url)
-
-        return MarketInfo(**json_obj)
+        return await self._make_request(
+            APIEndpoints.MARKET_INFO_V2,
+            converter=lambda x: MarketInfo(**x)
+        )
 
     async def get_tickers(self) -> Tickers:
         """Get information about recent trading activity on all markets
@@ -83,11 +72,10 @@ class PublicV2Client:
             tickers = await client.get_tickers()
             ```
         """
-        request_path = "/api/v2/public/ticker"
-        full_url = self.request_url(request_path)
-        json_obj = await base_get_request(full_url)
-
-        return Tickers(**json_obj)
+        return await self._make_request(
+            APIEndpoints.TICKER_V2,
+            converter=lambda x: Tickers(**x)
+        )
 
     async def get_recent_trades(self, market: str) -> RecentTrades:
         """Get recent trades for the requested market
@@ -110,11 +98,10 @@ class PublicV2Client:
         if not market:
             raise ValueError("Market parameter is required")
 
-        request_path = f"/api/v2/public/trades/{market}"
-        full_url = self.request_url(request_path)
-        json_obj = await base_get_request(full_url)
-
-        return RecentTrades(**json_obj)
+        return await self._make_request(
+            APIEndpoints.RECENT_TRADES_V2.format(market=market),
+            converter=lambda x: RecentTrades(**x)
+        )
 
     async def get_fee(self) -> FeeResponse:
         """Get fee information
@@ -131,11 +118,10 @@ class PublicV2Client:
             fee = await client.get_fee()
             ```
         """
-        request_path = "/api/v2/public/fee"
-        full_url = self.request_url(request_path)
-        json_obj = await base_get_request(full_url)
-
-        return FeeResponse(**json_obj)
+        return await self._make_request(
+            APIEndpoints.FEE_V2,
+            converter=lambda x: FeeResponse(**x)
+        )
 
     async def get_asset_status_list(self) -> AssetStatus:
         """Get asset status list
@@ -152,11 +138,10 @@ class PublicV2Client:
             asset_status = await client.get_asset_status_list()
             ```
         """
-        request_path = "/api/v2/public/assets"
-        full_url = self.request_url(request_path)
-        json_obj = await base_get_request(full_url)
-
-        return convert_asset_status_to_object(json_obj)
+        return await self._make_request(
+            APIEndpoints.ASSET_STATUS_V2,
+            converter=convert_asset_status_to_object
+        )
 
     async def get_order_depth(self, market: str) -> OrderDepthV2:
         """Get the current order book as two arrays (bids / asks)
@@ -179,8 +164,7 @@ class PublicV2Client:
         if not market:
             raise ValueError("Market parameter is required")
 
-        request_path = f"/api/v2/public/depth/{market}"
-        full_url = self.request_url(request_path)
-        json_obj = await base_get_request(full_url)
-
-        return convert_order_depth_to_object_v2(json_obj)
+        return await self._make_request(
+            APIEndpoints.DEPTH_V2.format(market=market),
+            converter=convert_order_depth_to_object_v2
+        )

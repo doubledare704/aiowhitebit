@@ -1,398 +1,301 @@
 """WhiteBit Public API v4 client."""
+from typing import Union, Dict
 
-from typing import Optional
-
-from aiowhitebit.clients.base import base_get_request
-from aiowhitebit.constants import BASE_URL
+from aiowhitebit.clients.base import BaseClient
+from aiowhitebit.config import APIEndpoints
 from aiowhitebit.converters.public import (
     convert_market_activity_to_object,
     convert_asset_status_to_object_v4,
-    convert_orderbook_to_object,
-    convert_recent_trades_to_object,
 )
 from aiowhitebit.models.public.v4 import (
-    MaintenanceStatus,
     MarketInfo,
     MarketActivity,
     AssetStatus,
+    MaintenanceStatus,
     Orderbook,
     Depth,
-    RecentTrades,
+    RecentTrades, RecentTrade,
     FeeResponse,
+    Fee,
     ServerTime,
     ServerStatus,
     CollateralMarkets,
     FuturesMarkets,
-    MiningPoolOverview,
 )
+from aiowhitebit.models.public.v4.response import FeeDetails, MiningPoolOverview
+from aiowhitebit.utils.rate_limiting import rate_limit
+from aiowhitebit.utils.validation import validate_market, WhitebitValidationError
 
 
-class PublicV4Client:
-    """WhiteBit Public API v4 client
+class PublicV4Client(BaseClient):
+    """WhiteBit Public API v4 client"""
 
-    This client provides methods to interact with the WhiteBit Public API v4.
-    All endpoints return time in Unix-time format and either a JSON object or array.
-
-    Rate limits vary by endpoint, check the documentation for each method.
-    """
-
-    def __init__(
-        self,
-        base_url: str = BASE_URL,
-    ) -> None:
-        """Initialize the WhiteBit Public API v4 client
-
-        Args:
-            base_url: Base URL for the WhiteBit API. Defaults to the official WhiteBit API URL.
-        """
-        self.base_url = base_url
-
-    def request_url(self, path: str) -> str:
-        """Construct the full URL for an API endpoint
-
-        Args:
-            path: API endpoint path
-
-        Returns:
-            Full URL for the API endpoint
-        """
-        return f"{self.base_url}{path}"
-
-    async def get_maintenance_status(self) -> MaintenanceStatus:
-        """Get maintenance status
-
-        This endpoint retrieves maintenance status.
-        1 - system operational, 0 - system maintenance.
-
-        Returns:
-            MaintenanceStatus: Maintenance status
-
-        Example:
-            ```python
-            client = PublicV4Client()
-            status = await client.get_maintenance_status()
-            ```
-        """
-        request_path = "/api/v4/public/platform/status"
-        full_url = self.request_url(request_path)
-        json_obj = await base_get_request(full_url)
-
-        return MaintenanceStatus(**json_obj)
-
+    @rate_limit(limit=2000, window=10.0)
     async def get_market_info(self) -> MarketInfo:
-        """Get information about all available spot and futures markets
+        """Get information about all available spot and futures markets"""
+        return await self._make_request(
+            APIEndpoints.MARKET_INFO,
+            converter=lambda x: MarketInfo(x)
+        )
 
-        This endpoint retrieves all information about available spot and futures markets.
-        Response is cached for 1 second.
-
-        Rate limit: 2000 requests/10 sec.
-
-        Returns:
-            MarketInfo: Information about all available markets
-
-        Example:
-            ```python
-            client = PublicV4Client()
-            markets = await client.get_market_info()
-            ```
-        """
-        request_path = "/api/v4/public/markets"
-        full_url = self.request_url(request_path)
-        json_obj = await base_get_request(full_url)
-
-        # The API returns a list of dictionaries with market information
-        return MarketInfo(json_obj)
-
+    @rate_limit(limit=2000, window=10.0)
     async def get_market_activity(self) -> MarketActivity:
-        """Get 24-hour pricing and volume summary for each market pair
+        """Get 24-hour pricing and volume summary"""
+        return await self._make_request(
+            APIEndpoints.MARKET_ACTIVITY,
+            converter=convert_market_activity_to_object
+        )
 
-        This endpoint retrieves a 24-hour pricing and volume summary for each market pair available on the exchange.
-        Response is cached for 1 second.
-
-        Rate limit: 2000 requests/10 sec.
-
-        Returns:
-            MarketActivity: 24-hour pricing and volume summary for each market pair
-
-        Example:
-            ```python
-            client = PublicV4Client()
-            activity = await client.get_market_activity()
-            ```
-        """
-        request_path = "/api/v4/public/ticker"
-        full_url = self.request_url(request_path)
-        json_obj = await base_get_request(full_url)
-
-        return convert_market_activity_to_object(json_obj)
-
+    @rate_limit(limit=2000, window=10.0)
     async def get_asset_status_list(self) -> AssetStatus:
-        """Get assets status
+        """Get asset status list"""
+        return await self._make_request(
+            APIEndpoints.ASSET_STATUS,
+            converter=convert_asset_status_to_object_v4
+        )
 
-        This endpoint retrieves the assets status.
-        Response is cached for 1 second.
-
-        Rate limit: 2000 requests/10 sec.
-
+    @rate_limit(limit=2000, window=10.0)
+    async def get_maintenance_status(self) -> MaintenanceStatus:
+        """Get system maintenance status
+        
         Returns:
-            AssetStatus: Assets status
-
-        Example:
-            ```python
-            client = PublicV4Client()
-            assets = await client.get_asset_status_list()
-            ```
+            MaintenanceStatus: System maintenance status
+                status: "1" - system operational
+                       "0" - system maintenance
         """
-        request_path = "/api/v4/public/assets"
-        full_url = self.request_url(request_path)
-        json_obj = await base_get_request(full_url)
+        return await self._make_request(
+            APIEndpoints.MAINTENANCE_STATUS,
+            converter=lambda x: MaintenanceStatus(**x)
+        )
 
-        return convert_asset_status_to_object_v4(json_obj)
-
-    async def get_orderbook(self, market: str, limit: Optional[int] = None, level: Optional[int] = None) -> Orderbook:
-        """Get orderbook for the requested market
-
-        This endpoint retrieves the current order book as two arrays (bids / asks) with additional parameters.
-        Response is cached for 100 ms.
-
-        Rate limit: 600 requests/10 sec.
-
+    @rate_limit(limit=2000, window=10.0)
+    async def get_orderbook(self, market: str, limit: int = None, level: int = None) -> Orderbook:
+        """Get orderbook for specific market
+    
         Args:
             market: Available market (e.g. BTC_USDT)
-            limit: Orders depth quantity: 0 - 100. Not defined or 0 will return 100 entries.
-            level: Optional parameter that allows API user to see different level of aggregation.
-                   Level 0 – default level, no aggregation.
-                   Starting from level 1 (lowest possible aggregation) and up to level 5.
-
+            limit: Limit of orderbook levels. Default: 100
+            level: Aggregation level of orderbook:
+                   1 - no aggregation (default)
+                   2 - aggregation by 2 decimals
+                   3 - aggregation by 3 decimals
+                   ...and so on up to 8
+    
         Returns:
-            Orderbook: Orderbook for the requested market
-
-        Example:
-            ```python
-            client = PublicV4Client()
-            orderbook = await client.get_orderbook("BTC_USDT", limit=10, level=0)
-            ```
+            Orderbook: Current orderbook data including asks and bids
+        
+        Raises:
+            WhitebitValidationError: If market is empty or parameters are invalid
         """
-        if not market:
-            raise ValueError("Market parameter is required")
-
-        request_path = f"/api/v4/public/orderbook/{market}"
-        params = {}
+        validate_market(market)
+        
+        params = []
+        
         if limit is not None:
-            params["limit"] = limit
+            if not isinstance(limit, int) or limit < 1:
+                raise WhitebitValidationError("Limit must be a positive integer")
+            params.append(f"limit={limit}")
+            
         if level is not None:
-            params["level"] = level
-
-        full_url = self.request_url(request_path)
+            if not isinstance(level, int) or level < 1 or level > 8:
+                raise WhitebitValidationError("Level must be an integer between 1 and 8")
+            params.append(f"level={level}")
+        
+        url = APIEndpoints.ORDERBOOK_V4.format(market=market)
         if params:
-            full_url += "?" + "&".join([f"{k}={v}" for k, v in params.items()])
+            url += "?" + "&".join(params)
+        
+        return await self._make_request(
+            url,
+            converter=lambda x: Orderbook(**x)
+        )
 
-        json_obj = await base_get_request(full_url)
-
-        return convert_orderbook_to_object(json_obj)
-
+    @rate_limit(limit=2000, window=10.0)
     async def get_depth(self, market: str) -> Depth:
-        """Get depth price levels within ±2% of the market last price
-
-        This endpoint retrieves depth price levels within ±2% of the market last price.
-        Response is cached for 1 sec.
-
-        Rate limit: 2000 requests/10 sec.
-
+        """Get market depth within ±2% of the market last price
+    
         Args:
             market: Available market (e.g. BTC_USDT)
-
+    
         Returns:
-            Depth: Depth price levels for the requested market
-
-        Example:
-            ```python
-            client = PublicV4Client()
-            depth = await client.get_depth("BTC_USDT")
-            ```
+            Depth: Market depth data including asks and bids within ±2% range
+        
+        Raises:
+            WhitebitValidationError: If market is empty
         """
-        if not market:
-            raise ValueError("Market parameter is required")
+        validate_market(market)
+        
+        url = APIEndpoints.DEPTH_V4.format(market=market)
+        return await self._make_request(
+            url,
+            converter=lambda x: Depth(**x)
+        )
 
-        request_path = f"/api/v4/public/orderbook/depth/{market}"
-        full_url = self.request_url(request_path)
-        json_obj = await base_get_request(full_url)
-
-        return Depth(**json_obj)
-
-    async def get_recent_trades(self, market: str, trade_type: Optional[str] = None) -> RecentTrades:
-        """Get recent trades for the requested market
-
-        This endpoint retrieves the trades that have been executed recently on the requested market.
-        Response is cached for 1 second.
-
-        Rate limit: 2000 requests/10 sec.
-
+    @rate_limit(limit=2000, window=10.0)
+    async def get_recent_trades(self, market: str, trade_type: str = None) -> RecentTrades:
+        """Get recent trades for specific market
+    
         Args:
             market: Available market (e.g. BTC_USDT)
-            trade_type: Can be buy or sell
-
+            trade_type: Optional filter by trade type: "buy" or "sell"
+    
         Returns:
-            RecentTrades: Recent trades for the requested market
-
-        Example:
-            ```python
-            client = PublicV4Client()
-            trades = await client.get_recent_trades("BTC_USDT", trade_type="sell")
-            ```
+            RecentTrades: List of recent trades
+        
+        Raises:
+            WhitebitValidationError: If market is empty or trade_type is invalid
         """
-        if not market:
-            raise ValueError("Market parameter is required")
+        validate_market(market)
+        
+        if trade_type is not None and trade_type not in ["buy", "sell"]:
+            raise WhitebitValidationError("Trade type must be either 'buy' or 'sell'")
+        
+        url = APIEndpoints.TRADES_V4.format(market=market)
+        if trade_type:
+            url += f"?type={trade_type}"
+        
+        return await self._make_request(
+            url,
+            converter=lambda x: RecentTrades([RecentTrade(**trade) for trade in x])
+        )
 
-        request_path = f"/api/v4/public/trades/{market}"
-        params = {}
-        if trade_type is not None:
-            if trade_type not in ["buy", "sell"]:
-                raise ValueError("Type must be 'buy' or 'sell'")
-            params["type"] = trade_type
-
-        full_url = self.request_url(request_path)
-        if params:
-            full_url += "?" + "&".join([f"{k}={v}" for k, v in params.items()])
-
-        json_obj = await base_get_request(full_url)
-
-        return convert_recent_trades_to_object(json_obj)
-
+    @rate_limit(limit=2000, window=10.0)
     async def get_fee(self) -> FeeResponse:
-        """Get fee and min/max amount for deposits and withdraws
-
-        This endpoint retrieves the list of fees and min/max amount for deposits and withdraws.
-        Response is cached for 1 second.
-
-        Rate limit: 2000 requests/10 sec.
-
+        """Get fee information for all available assets
+    
         Returns:
-            FeeResponse: Fee and min/max amount for deposits and withdraws
-
-        Example:
-            ```python
-            client = PublicV4Client()
-            fee = await client.get_fee()
-            ```
+            FeeResponse: Dictionary mapping currency tickers to their fee information
         """
-        request_path = "/api/v4/public/fee"
-        full_url = self.request_url(request_path)
-        json_obj = await base_get_request(full_url)
+        def convert_fee_details(details) -> Union[FeeDetails, Dict[str, FeeDetails]]:
+            if not details:  # Handle empty dictionaries
+                return FeeDetails(
+                    min_amount='0',
+                    max_amount='0',
+                    fixed=None,
+                    flex=None
+                )
+            
+            # Handle provider-specific fees (like USD case)
+            if any(isinstance(v, dict) and 'ticker' in v for v in details.values()):
+                provider_fees = {}
+                for provider, provider_details in details.items():
+                    provider_fees[provider] = FeeDetails(
+                        min_amount=provider_details.get('min_amount', '0'),
+                        max_amount=provider_details.get('max_amount', '0'),
+                        fixed=provider_details.get('fixed'),
+                        flex=provider_details.get('flex'),
+                        is_depositable=provider_details.get('is_depositable'),
+                        is_withdrawal=provider_details.get('is_withdrawal'),
+                        is_api_withdrawal=provider_details.get('is_api_withdrawal'),
+                        is_api_depositable=provider_details.get('is_api_depositable'),
+                        name=provider_details.get('name'),
+                        ticker=provider_details.get('ticker')
+                    )
+                return provider_fees
+            
+            # Handle simple fee details (like USDT case)
+            return FeeDetails(
+                min_amount=details.get('min_amount', '0'),
+                max_amount=details.get('max_amount', '0'),
+                fixed=details.get('fixed'),
+                flex=details.get('flex')
+            )
 
-        return FeeResponse(json_obj)
+        response = await self._make_request(APIEndpoints.FEE_V4)
+        result = {}
+        
+        for display_name, details in response.items():
+            try:
+                fee = Fee(
+                    ticker=details['ticker'],
+                    name=details['name'],
+                    providers=details.get('providers', []),
+                    deposit=convert_fee_details(details.get('deposit', {})),
+                    withdraw=convert_fee_details(details.get('withdraw', {})),
+                    is_depositable=details.get('is_depositable', False),
+                    is_withdrawal=details.get('is_withdrawal', False),
+                    is_api_withdrawal=details.get('is_api_withdrawal', False),
+                    is_api_depositable=details.get('is_api_depositable', False)
+                )
+                result[details['ticker']] = fee
+            except Exception as e:
+                print(f"Error processing currency {display_name}:")
+                print(f"Details: {details}")
+                print(f"Error: {str(e)}")
+                raise
 
+        return FeeResponse(result)
+
+    @rate_limit(limit=2000, window=10.0)
     async def get_server_time(self) -> ServerTime:
-        """Get server time
-
-        This endpoint retrieves the current server time.
-        Response is cached for 1 second.
-
-        Rate limit: 2000 requests/10 sec.
-
+        """Get current server time
+    
         Returns:
-            ServerTime: Current server time
-
-        Example:
-            ```python
-            client = PublicV4Client()
-            time = await client.get_server_time()
-            ```
+            ServerTime: Current server time in Unix timestamp format
         """
-        request_path = "/api/v4/public/time"
-        full_url = self.request_url(request_path)
-        json_obj = await base_get_request(full_url)
+        return await self._make_request(
+            APIEndpoints.TIME_V4,
+            converter=lambda x: ServerTime(**x)
+        )
 
-        return ServerTime(**json_obj)
-
+    @rate_limit(limit=2000, window=10.0)
     async def get_server_status(self) -> ServerStatus:
-        """Get server status
-
-        This endpoint retrieves the current API life-state.
-        Response is cached for 1 second.
-
-        Rate limit: 2000 requests/10 sec.
-
+        """Get server status by sending a ping request
+    
         Returns:
-            ServerStatus: Current API life-state
-
-        Example:
-            ```python
-            client = PublicV4Client()
-            status = await client.get_server_status()
-            ```
+            ServerStatus: Server status response, a list containing a single "pong" string
         """
-        request_path = "/api/v4/public/ping"
-        full_url = self.request_url(request_path)
-        json_obj = await base_get_request(full_url)
+        return await self._make_request(
+            APIEndpoints.PING_V4,
+            converter=lambda x: ServerStatus(x)
+        )
 
-        return ServerStatus(json_obj)
-
+    @rate_limit(limit=2000, window=10.0)
     async def get_collateral_markets(self) -> CollateralMarkets:
-        """Get collateral markets list
-
-        This endpoint returns the list of markets that available for collateral trading.
-        Response is cached for 1 second.
-
-        Rate limit: 2000 requests/10 sec.
-
+        """Get list of markets available for collateral trading
+    
         Returns:
-            CollateralMarkets: List of markets that available for collateral trading
-
-        Example:
-            ```python
-            client = PublicV4Client()
-            markets = await client.get_collateral_markets()
-            ```
+            CollateralMarkets: List of market names that are available for collateral trading
         """
-        request_path = "/api/v4/public/collateral/markets"
-        full_url = self.request_url(request_path)
-        json_obj = await base_get_request(full_url)
+        return await self._make_request(
+            APIEndpoints.COLLATERAL_MARKETS,
+            converter=lambda x: CollateralMarkets(x)
+        )
 
-        return CollateralMarkets(json_obj)
-
+    @rate_limit(limit=2000, window=10.0)
     async def get_futures_markets(self) -> FuturesMarkets:
-        """Get available futures markets list
-
-        This endpoint returns the list of available futures markets.
-        Response is cached for 1 second.
-
-        Rate limit: 2000 requests/10 sec.
-
+        """Get list of available futures markets and their details
+    
         Returns:
-            FuturesMarkets: List of available futures markets
-
-        Example:
-            ```python
-            client = PublicV4Client()
-            markets = await client.get_futures_markets()
-            ```
+            FuturesMarkets: Information about all available futures markets including:
+                - Ticker information
+                - Price data
+                - Volume data
+                - Product details
+                - Funding rates
+                - Leverage brackets
         """
-        request_path = "/api/v4/public/futures"
-        full_url = self.request_url(request_path)
-        json_obj = await base_get_request(full_url)
+        return await self._make_request(
+            APIEndpoints.FUTURES_MARKETS,
+            converter=lambda x: FuturesMarkets(**x)  # Pass the entire response object
+        )
 
-        return FuturesMarkets(**json_obj)
-
+    @rate_limit(limit=2000, window=10.0)
     async def get_mining_pool_overview(self) -> MiningPoolOverview:
-        """Get mining pool overview
-
-        This endpoint returns an overall information about the current mining pool state.
-        HashRate info represents in the H units.
-
-        Rate limit: 1000 requests/10 sec.
-
+        """Get mining pool overview information
+    
         Returns:
-            MiningPoolOverview: Overall information about the current mining pool state
-
-        Example:
-            ```python
-            client = PublicV4Client()
-            overview = await client.get_mining_pool_overview()
-            ```
+            MiningPoolOverview: Information about the mining pool including:
+                - Connection links
+                - Location
+                - Supported assets
+                - Reward schemes
+                - Number of workers
+                - Current hash rate
+                - Last 7 days hash rate
+                - Recent blocks
         """
-        request_path = "/api/v4/public/mining-pool"
-        full_url = self.request_url(request_path)
-        json_obj = await base_get_request(full_url)
-
-        return MiningPoolOverview(**json_obj)
+        return await self._make_request(
+            APIEndpoints.MINING_POOL,
+            converter=lambda x: MiningPoolOverview(**x)
+        )
