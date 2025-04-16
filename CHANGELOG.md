@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.1.0] - 2024-03-XX
+## [0.1.1] - 2024-03-14
 
 ### Added
 - Initial release
@@ -8,5 +8,3 @@
 - Support for Private API v4
 - WebSocket client implementation
 - Webhook support
-- Rate limiting
-- Comprehensive test suite
