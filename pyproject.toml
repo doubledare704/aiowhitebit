@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "aiowhitebit"
-version = "0.1.1"  # Update this version number
+version = "0.1.2"  # Increment version number
 description = "Async Python client for WhiteBit API"
 readme = "README.md"
 authors = [
