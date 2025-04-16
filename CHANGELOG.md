@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.5] - 2024-03-XX
+
+### Changed
+- Relaxed Pydantic version constraints to support both v1 and v2 versions
+- Fixed dependency conflicts with other packages
+
 ## [0.1.4] - 2024-03-XX
 
 ### Added
