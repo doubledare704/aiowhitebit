@@ -20,7 +20,9 @@ jobs:
         pip install -r requirements-dev.txt
         pip install -e .
     - name: Run tests
-      run: pytest
+      run: |
+        # Add current directory to PYTHONPATH
+        PYTHONPATH=$PYTHONPATH:$(pwd) pytest
 
   build-and-publish:
     needs: test
