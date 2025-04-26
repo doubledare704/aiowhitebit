@@ -48,7 +48,7 @@ class SubscribeRequest:
             request = SubscribeRequest.candles_subscribe("BTC_USDT", 900)
             ```
         """
-        return WSRequest(method="candles_subscribe", params=[market, interval], id=next(id_gen)).dict()
+        return WSRequest(method="candles_subscribe", params=[market, interval], id=next(id_gen)).model_dump()
 
     @staticmethod
     def lastprice_subscribe(markets: List[str]) -> dict:
@@ -65,7 +65,7 @@ class SubscribeRequest:
             request = SubscribeRequest.lastprice_subscribe(["BTC_USDT", "ETH_BTC"])
             ```
         """
-        return WSRequest(method="lastprice_subscribe", params=[*markets], id=next(id_gen)).dict()
+        return WSRequest(method="lastprice_subscribe", params=[*markets], id=next(id_gen)).model_dump()
 
     @staticmethod
     def market_subscribe(markets: List[str]) -> dict:
@@ -82,7 +82,7 @@ class SubscribeRequest:
             request = SubscribeRequest.market_subscribe(["BTC_USDT", "ETH_BTC"])
             ```
         """
-        return WSRequest(method="market_subscribe", params=[*markets], id=next(id_gen)).dict()
+        return WSRequest(method="market_subscribe", params=[*markets], id=next(id_gen)).model_dump()
 
     @staticmethod
     def market_today_subscribe(markets: List[str]) -> dict:
@@ -99,7 +99,7 @@ class SubscribeRequest:
             request = SubscribeRequest.market_today_subscribe(["BTC_USDT", "ETH_BTC"])
             ```
         """
-        return WSRequest(method="marketToday_subscribe", params=[*markets], id=next(id_gen)).dict()
+        return WSRequest(method="marketToday_subscribe", params=[*markets], id=next(id_gen)).model_dump()
 
     @staticmethod
     def trades_subscribe(markets: List[str]) -> dict:
@@ -116,7 +116,7 @@ class SubscribeRequest:
             request = SubscribeRequest.trades_subscribe(["BTC_USDT", "ETH_BTC"])
             ```
         """
-        return WSRequest(method="trades_subscribe", params=[*markets], id=next(id_gen)).dict()
+        return WSRequest(method="trades_subscribe", params=[*markets], id=next(id_gen)).model_dump()
 
     @staticmethod
     def depth_subscribe(
@@ -146,7 +146,7 @@ class SubscribeRequest:
             method="depth_subscribe",
             params=[market, limit, price_intervals, multiple_sub],
             id=next(id_gen),
-        ).dict()
+        ).model_dump()
 
 
 def ws_subscribe_builder(

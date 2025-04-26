@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.0] - 2024-07-15
+
+### Changed
+- Dropped support for Pydantic v1, now requires Pydantic v2+
+- Updated codebase to use Pydantic v2 features
+
 ## [0.1.5] - 2024-03-XX
 
 ### Changed

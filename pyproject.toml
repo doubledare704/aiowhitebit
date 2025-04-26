@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "aiowhitebit"
-version = "0.1.5"
+version = "0.2.0"  # Bumping minor version for feature change
 description = "Async Python client for WhiteBit API"
 readme = "README.md"
 authors = [
@@ -24,10 +24,10 @@ classifiers = [
 ]
 keywords = ["whitebit", "crypto", "exchange", "api", "async", "trading"]
 dependencies = [
-    "aiohttp==3.11.16",
+    "aiohttp==3.11.18",
     "aiodns==3.2.0",
     "uvloop==0.21.0",
-    "pydantic>=1.10.21,<3.0.0",  # Allow both v1 and v2
+    "pydantic>=2.0.0,<3.0.0",  # Only support Pydantic v2
     "websockets==15.0.1",
     "websocket-client==1.8.0",
 ]

@@ -10,7 +10,7 @@ __all__ = [
 
 from typing import Any, Dict, Optional, Union
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator
 
 
 class WebhookParams(BaseModel):
@@ -80,7 +80,7 @@ class TransactionParams(WebhookParams):
     uniqueId: Optional[str] = None
     confirmations: Optional[ConfirmationsInfo] = None
 
-    @validator("method")
+    @field_validator("method")
     def validate_method(cls, v):
         if v is not None and v not in [1, 2]:
             raise ValueError("Method must be 1 (deposit) or 2 (withdraw)")
@@ -100,9 +100,9 @@ class WebhookRequest(BaseModel):
     params: Union[WebhookParams, CodeApplyParams, TransactionParams, Dict[str, Any]]
     id: str
 
-    @validator("params", pre=True)
-    def validate_params(cls, v, values):
-        method = values.get("method", "")
+    @field_validator("params", mode="before")
+    def validate_params(cls, v, info):
+        method = info.data.get("method", "")
 
         if method == "code.apply":
             return CodeApplyParams(**v)

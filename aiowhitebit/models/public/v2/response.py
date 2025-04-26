@@ -3,7 +3,7 @@
 from datetime import datetime
 from typing import List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from aiowhitebit.models.base import BasePublicV2Response
 from aiowhitebit.models.public.v1.response import OrderDepth
@@ -38,11 +38,7 @@ class Market(BaseModel):
     minTotal: float
     tradesEnabled: bool
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class MarketInfo(BasePublicV2Response):
@@ -54,11 +50,7 @@ class MarketInfo(BasePublicV2Response):
 
     result: List[Market]
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class Ticker(BaseModel):
@@ -84,11 +76,7 @@ class Ticker(BaseModel):
     quoteVolume24h: float
     tradesEnabled: bool
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class Tickers(BasePublicV2Response):
@@ -100,11 +88,7 @@ class Tickers(BasePublicV2Response):
 
     result: List[Ticker]
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class RecentTrade(BaseModel):
@@ -124,11 +108,7 @@ class RecentTrade(BaseModel):
     time: datetime
     isBuyerMaker: bool
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class RecentTrades(BasePublicV2Response):
@@ -140,11 +120,7 @@ class RecentTrades(BasePublicV2Response):
 
     result: List[RecentTrade]
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class Fee(BaseModel):
@@ -158,11 +134,7 @@ class Fee(BaseModel):
     makerFee: float
     takerFee: float
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class FeeResponse(BasePublicV2Response):
@@ -174,11 +146,7 @@ class FeeResponse(BasePublicV2Response):
 
     result: Fee
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class Asset(BaseModel):
@@ -208,11 +176,7 @@ class Asset(BaseModel):
     makerFee: float
     takerFee: float
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class AssetStatus(BasePublicV2Response):
@@ -224,11 +188,7 @@ class AssetStatus(BasePublicV2Response):
 
     result: List[Asset]
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class OrderDepthV2(OrderDepth):
@@ -242,8 +202,4 @@ class OrderDepthV2(OrderDepth):
 
     lastUpdateTimestamp: datetime
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")

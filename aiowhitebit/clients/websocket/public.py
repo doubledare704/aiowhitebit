@@ -83,7 +83,7 @@ class PublicWebSocketClient:
         Returns:
             WebSocket response
         """
-        response = await self.ws.send_message(req.dict())
+        response = await self.ws.send_message(req.model_dump())
         return WSResponse(**response)
 
     async def ping(self) -> WSResponse:

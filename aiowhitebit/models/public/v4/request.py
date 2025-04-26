@@ -2,7 +2,7 @@
 
 from typing import Optional
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, ConfigDict, field_validator
 
 
 class OrderbookRequest(BaseModel):
@@ -20,28 +20,25 @@ class OrderbookRequest(BaseModel):
     limit: Optional[int] = None
     level: Optional[int] = None
 
-    @validator("market")
+    model_config = ConfigDict(frozen=True)
+
+    @field_validator("market")
     def validate_market(cls, v):
         if not v:
             raise ValueError("Market parameter is required")
         return v
 
-    @validator("limit")
+    @field_validator("limit")
     def validate_limit(cls, v):
         if v is not None and (v < 0 or v > 100):
             raise ValueError("Limit must be between 0 and 100")
         return v
 
-    @validator("level")
+    @field_validator("level")
     def validate_level(cls, v):
         if v is not None and (v < 0 or v > 5):
             raise ValueError("Level must be between 0 and 5")
         return v
-
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
 
 
 class RecentTradesRequest(BaseModel):
@@ -55,19 +52,16 @@ class RecentTradesRequest(BaseModel):
     market: str
     type: Optional[str] = None
 
-    @validator("market")
+    model_config = ConfigDict(frozen=True)
+
+    @field_validator("market")
     def validate_market(cls, v):
         if not v:
             raise ValueError("Market parameter is required")
         return v
 
-    @validator("type")
+    @field_validator("type")
     def validate_type(cls, v):
         if v is not None and v not in ["buy", "sell"]:
             raise ValueError("Type must be 'buy' or 'sell'")
         return v
-
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable

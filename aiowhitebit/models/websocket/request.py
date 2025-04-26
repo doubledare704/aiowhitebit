@@ -3,7 +3,7 @@
 import time
 from typing import Any, List
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator
 
 
 class WSRequest(BaseModel):
@@ -19,7 +19,7 @@ class WSRequest(BaseModel):
     params: List[Any]
     id: int = int(time.time())
 
-    @validator("method")
+    @field_validator("method")
     def validate_method(cls, v):
         if not v:
             raise ValueError("Method parameter is required")

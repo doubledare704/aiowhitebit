@@ -1,9 +1,6 @@
 """Request models for the WhiteBit Public API v2."""
 
-try:
-    from pydantic.v1 import BaseModel, validator  # For Pydantic v2
-except ImportError:
-    from pydantic import BaseModel, validator  # For Pydantic v1
+from pydantic import BaseModel, ConfigDict, field_validator
 
 
 class RecentTradesRequest(BaseModel):
@@ -15,24 +12,13 @@ class RecentTradesRequest(BaseModel):
 
     market: str
 
-    @validator("market")
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    @field_validator("market")
     def validate_market(cls, v):
         if not v:
             raise ValueError("Market parameter is required")
         return v
-
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True
-
-        # Add compatibility for both v1 and v2
-        try:
-            from pydantic.v1 import Extra
-
-            extra = Extra.forbid
-        except ImportError:
-            extra = "forbid"
 
 
 class OrderDepthRequest(BaseModel):
@@ -44,13 +30,10 @@ class OrderDepthRequest(BaseModel):
 
     market: str
 
-    @validator("market")
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    @field_validator("market")
     def validate_market(cls, v):
         if not v:
             raise ValueError("Market parameter is required")
         return v
-
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable

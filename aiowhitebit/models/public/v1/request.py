@@ -2,7 +2,7 @@
 
 from typing import Optional
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator
 
 
 class KlineRequest(BaseModel):
@@ -28,7 +28,7 @@ class KlineRequest(BaseModel):
     interval: Optional[str] = None
     limit: Optional[int] = None
 
-    @validator("interval")
+    @field_validator("interval")
     def validate_interval(cls, v):
         if v is not None:
             valid_intervals = [
@@ -52,15 +52,15 @@ class KlineRequest(BaseModel):
                 raise ValueError(f"Invalid interval. Must be one of: {', '.join(valid_intervals)}")
         return v
 
-    @validator("limit")
+    @field_validator("limit")
     def validate_limit(cls, v):
         if v is not None and (v < 1 or v > 1440):
             raise ValueError("Limit must be between 1 and 1440")
         return v
 
-    @validator("start", "end")
-    def validate_start_end(cls, v, values):
-        if "start" in values and values["start"] is not None and v is not None and values["start"] > v:
+    @field_validator("start", "end")
+    def validate_start_end(cls, v, info):
+        if "start" in info.data and info.data["start"] is not None and v is not None and info.data["start"] > v:
             raise ValueError("Start time cannot be greater than end time")
         return v
 
@@ -76,7 +76,7 @@ class OrderDepthRequest(BaseModel):
     market: str
     limit: Optional[int] = None
 
-    @validator("limit")
+    @field_validator("limit")
     def validate_limit(cls, v):
         if v is not None and (v < 1 or v > 100):
             raise ValueError("Limit must be between 1 and 100")
@@ -96,7 +96,7 @@ class TradeHistoryRequest(BaseModel):
     last_id: int
     limit: Optional[int] = None
 
-    @validator("last_id")
+    @field_validator("last_id")
     def validate_last_id(cls, v):
         if v < 0:
             raise ValueError("Last ID must be a positive integer")

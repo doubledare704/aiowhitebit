@@ -2,7 +2,7 @@
 
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from aiowhitebit.models.base import BaseResponse
 
@@ -16,16 +16,12 @@ class MaintenanceStatus(BaseModel):
 
     status: Union[str, int]
 
-    @field_validator('status')
+    model_config = ConfigDict(frozen=True, extra="ignore")
+
+    @field_validator("status")
     def validate_status(cls, v):
         """Convert any status to string for consistency."""
         return str(v)
-
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True
-        extra = "ignore"
 
 
 class Market(BaseModel):
@@ -63,11 +59,7 @@ class Market(BaseModel):
     isCollateral: bool = False
     type: str
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class MarketInfo(List[Dict[str, Any]]):
@@ -100,11 +92,7 @@ class MarketActivityItem(BaseModel):
     isFrozen: bool
     change: str
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class MarketActivity(Dict[str, MarketActivityItem]):
@@ -121,9 +109,7 @@ class MinLimit(BaseModel):
 
     min: str
 
-    class Config:
-        frozen = True
-        extra = "ignore"
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class NetworkTypeLimit(BaseModel):
@@ -131,9 +117,7 @@ class NetworkTypeLimit(BaseModel):
 
     ERC20: MinLimit
 
-    class Config:
-        frozen = True
-        extra = "ignore"
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class Limits(BaseModel):
@@ -142,9 +126,7 @@ class Limits(BaseModel):
     deposit: NetworkTypeLimit
     withdraw: NetworkTypeLimit
 
-    class Config:
-        frozen = True
-        extra = "ignore"
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class Networks(BaseModel):
@@ -154,9 +136,7 @@ class Networks(BaseModel):
     deposits: Optional[List[str]] = []  # e.g. ["ERC20"]
     withdraws: Optional[List[str]] = []  # e.g. ["ERC20"]
 
-    class Config:
-        frozen = True
-        extra = "ignore"
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class Asset(BaseModel):
@@ -179,9 +159,7 @@ class Asset(BaseModel):
     confirmations: Optional[Dict[str, int]] = {}  # e.g. {"ERC20": 32}
     providers: Optional[Dict[str, List[str]]] = None
 
-    class Config:
-        frozen = True
-        extra = "ignore"
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class AssetStatus(Dict[str, Asset]):
@@ -201,11 +179,7 @@ class OrderbookItem(BaseModel):
     price: str
     amount: str
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class Orderbook(BaseModel):
@@ -223,11 +197,7 @@ class Orderbook(BaseModel):
     asks: List[List[str]]
     bids: List[List[str]]
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class Depth(Orderbook):
@@ -258,11 +228,7 @@ class RecentTrade(BaseModel):
     trade_timestamp: int
     type: str
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class RecentTrades(List[RecentTrade]):
@@ -287,11 +253,7 @@ class FeeFlex(BaseModel):
     max_fee: str
     percent: str
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class FeeDetails(BaseModel):
@@ -321,11 +283,7 @@ class FeeDetails(BaseModel):
     name: Optional[str] = None
     ticker: Optional[str] = None
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class Fee(BaseModel):
@@ -353,11 +311,7 @@ class Fee(BaseModel):
     is_api_withdrawal: bool
     is_api_depositable: bool
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class FeeResponse(Dict[str, Fee]):
@@ -378,11 +332,7 @@ class ServerTime(BaseModel):
 
     time: int
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class ServerStatus(List[str]):
@@ -426,12 +376,7 @@ class FuturesBrackets(BaseModel):
     bracket_50: int = Field(0, alias="50")
     bracket_100: int = Field(0, alias="100")
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
-        allow_population_by_field_name = True
+    model_config = ConfigDict(frozen=True, extra="ignore", populate_by_name=True)
 
 
 class FuturesMarket(BaseModel):
@@ -479,11 +424,7 @@ class FuturesMarket(BaseModel):
     brackets: FuturesBrackets
     max_leverage: int
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class FuturesMarketsResult(BaseModel):
@@ -495,11 +436,7 @@ class FuturesMarketsResult(BaseModel):
 
     result: List[FuturesMarket]
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class FuturesMarkets(BaseResponse):
@@ -513,11 +450,7 @@ class FuturesMarkets(BaseResponse):
 
     result: List[FuturesMarket]
 
-    class Config:
-        """Pydantic model configuration"""
-
-        frozen = True  # Makes the model immutable
-        extra = "ignore"  # Ignores extra fields in the input data
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class MiningPoolHashRate(BaseModel):
@@ -526,9 +459,7 @@ class MiningPoolHashRate(BaseModel):
     timestamp: int
     hashrate: str
 
-    class Config:
-        frozen = True
-        extra = "ignore"
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class MiningPoolBlock(BaseModel):
@@ -537,9 +468,7 @@ class MiningPoolBlock(BaseModel):
     blockFoundAt: int
     blockHeight: int
 
-    class Config:
-        frozen = True
-        extra = "ignore"
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class MiningPoolData(BaseModel):
@@ -554,9 +483,7 @@ class MiningPoolData(BaseModel):
     rewardSchemes: List[str]
     workers: int
 
-    class Config:
-        frozen = True
-        extra = "ignore"
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class MiningPoolOverview(BaseModel):
@@ -564,6 +491,4 @@ class MiningPoolOverview(BaseModel):
 
     data: MiningPoolData
 
-    class Config:
-        frozen = True
-        extra = "ignore"
+    model_config = ConfigDict(frozen=True, extra="ignore")
