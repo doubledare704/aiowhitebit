@@ -23,7 +23,10 @@ def convert_asset_status_to_object(json_body: dict) -> AssetStatus:
         temp["asset_name"] = k
         asset = Asset(**temp)
         items.append(asset)
-    return AssetStatus(success=json_body.get("success"), message=json_body.get("message"), result=items)
+
+    success = bool(json_body.get("success", False))
+    message = json_body.get("message", "")
+    return AssetStatus(success=success, message=message, result=items)
 
 
 def convert_order_depth_to_object_v2(json_body: dict) -> OrderDepthV2:

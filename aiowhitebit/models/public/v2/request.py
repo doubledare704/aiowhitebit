@@ -15,7 +15,19 @@ class RecentTradesRequest(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
     @field_validator("market")
+    @classmethod
     def validate_market(cls, v):
+        """Validate that market parameter is not empty.
+
+        Args:
+            v: The market value to validate.
+
+        Returns:
+            The validated market value.
+
+        Raises:
+            ValueError: If the market value is empty.
+        """
         if not v:
             raise ValueError("Market parameter is required")
         return v
@@ -33,7 +45,19 @@ class OrderDepthRequest(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
     @field_validator("market")
+    @classmethod
     def validate_market(cls, v):
+        """Validate that market parameter is not empty.
+
+        Args:
+            v: The market value to validate.
+
+        Returns:
+            The validated market value.
+
+        Raises:
+            ValueError: If the market value is empty.
+        """
         if not v:
             raise ValueError("Market parameter is required")
         return v

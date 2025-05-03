@@ -1,6 +1,6 @@
 """WhiteBit Public API v4 client."""
 
-from typing import Dict, Union
+from typing import Optional, Union
 
 from aiowhitebit.clients.base import BaseClient
 from aiowhitebit.config import APIEndpoints
@@ -30,26 +30,26 @@ from aiowhitebit.utils.validation import WhitebitValidationError, validate_marke
 
 
 class PublicV4Client(BaseClient):
-    """WhiteBit Public API v4 client"""
+    """WhiteBit Public API v4 client."""
 
     @rate_limit(limit=2000, window=10.0)
     async def get_market_info(self) -> MarketInfo:
-        """Get information about all available spot and futures markets"""
+        """Get information about all available spot and futures markets."""
         return await self._make_request(APIEndpoints.MARKET_INFO, converter=lambda x: MarketInfo(x))
 
     @rate_limit(limit=2000, window=10.0)
     async def get_market_activity(self) -> MarketActivity:
-        """Get 24-hour pricing and volume summary"""
+        """Get 24-hour pricing and volume summary."""
         return await self._make_request(APIEndpoints.MARKET_ACTIVITY, converter=convert_market_activity_to_object)
 
     @rate_limit(limit=2000, window=10.0)
     async def get_asset_status_list(self) -> AssetStatus:
-        """Get asset status list"""
+        """Get asset status list."""
         return await self._make_request(APIEndpoints.ASSET_STATUS, converter=convert_asset_status_to_object_v4)
 
     @rate_limit(limit=2000, window=10.0)
     async def get_maintenance_status(self) -> MaintenanceStatus:
-        """Get system maintenance status
+        """Get system maintenance status.
 
         Returns:
             MaintenanceStatus: System maintenance status
@@ -59,8 +59,8 @@ class PublicV4Client(BaseClient):
         return await self._make_request(APIEndpoints.MAINTENANCE_STATUS, converter=lambda x: MaintenanceStatus(**x))
 
     @rate_limit(limit=2000, window=10.0)
-    async def get_orderbook(self, market: str, limit: int = None, level: int = None) -> Orderbook:
-        """Get orderbook for specific market
+    async def get_orderbook(self, market: str, limit: Optional[int] = None, level: Optional[int] = None) -> Orderbook:
+        """Get orderbook for specific market.
 
         Args:
             market: Available market (e.g. BTC_USDT)
@@ -99,7 +99,7 @@ class PublicV4Client(BaseClient):
 
     @rate_limit(limit=2000, window=10.0)
     async def get_depth(self, market: str) -> Depth:
-        """Get market depth within ±2% of the market last price
+        """Get market depth within ±2% of the market last price.
 
         Args:
             market: Available market (e.g. BTC_USDT)
@@ -116,8 +116,8 @@ class PublicV4Client(BaseClient):
         return await self._make_request(url, converter=lambda x: Depth(**x))
 
     @rate_limit(limit=2000, window=10.0)
-    async def get_recent_trades(self, market: str, trade_type: str = None) -> RecentTrades:
-        """Get recent trades for specific market
+    async def get_recent_trades(self, market: str, trade_type: Optional[str] = None) -> RecentTrades:
+        """Get recent trades for specific market.
 
         Args:
             market: Available market (e.g. BTC_USDT)
@@ -142,13 +142,13 @@ class PublicV4Client(BaseClient):
 
     @rate_limit(limit=2000, window=10.0)
     async def get_fee(self) -> FeeResponse:
-        """Get fee information for all available assets
+        """Get fee information for all available assets.
 
         Returns:
             FeeResponse: Dictionary mapping currency tickers to their fee information
         """
 
-        def convert_fee_details(details) -> Union[FeeDetails, Dict[str, FeeDetails]]:
+        def convert_fee_details(details) -> Union[FeeDetails, dict[str, FeeDetails]]:
             if not details:  # Handle empty dictionaries
                 return FeeDetails(min_amount="0", max_amount="0", fixed=None, flex=None)
 
@@ -205,7 +205,7 @@ class PublicV4Client(BaseClient):
 
     @rate_limit(limit=2000, window=10.0)
     async def get_server_time(self) -> ServerTime:
-        """Get current server time
+        """Get current server time.
 
         Returns:
             ServerTime: Current server time in Unix timestamp format
@@ -214,7 +214,7 @@ class PublicV4Client(BaseClient):
 
     @rate_limit(limit=2000, window=10.0)
     async def get_server_status(self) -> ServerStatus:
-        """Get server status by sending a ping request
+        """Get server status by sending a ping request.
 
         Returns:
             ServerStatus: Server status response, a list containing a single "pong" string
@@ -223,7 +223,7 @@ class PublicV4Client(BaseClient):
 
     @rate_limit(limit=2000, window=10.0)
     async def get_collateral_markets(self) -> CollateralMarkets:
-        """Get list of markets available for collateral trading
+        """Get list of markets available for collateral trading.
 
         Returns:
             CollateralMarkets: List of market names that are available for collateral trading
@@ -232,7 +232,7 @@ class PublicV4Client(BaseClient):
 
     @rate_limit(limit=2000, window=10.0)
     async def get_futures_markets(self) -> FuturesMarkets:
-        """Get list of available futures markets and their details
+        """Get list of available futures markets and their details.
 
         Returns:
             FuturesMarkets: Information about all available futures markets including:
@@ -250,7 +250,7 @@ class PublicV4Client(BaseClient):
 
     @rate_limit(limit=2000, window=10.0)
     async def get_mining_pool_overview(self) -> MiningPoolOverview:
-        """Get mining pool overview information
+        """Get mining pool overview information.
 
         Returns:
             MiningPoolOverview: Information about the mining pool including:

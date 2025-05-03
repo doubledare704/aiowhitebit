@@ -1,3 +1,5 @@
+"""Setup script for aiowhitebit."""
+
 from setuptools import setup
 
 setup(

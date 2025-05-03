@@ -1,3 +1,9 @@
+"""Constants used throughout the WhiteBit API client.
+
+This module defines various constants used by the WhiteBit API client,
+including API URLs, error codes, and environment variable names.
+"""
+
 import os
 
 BASE_URL = "https://whitebit.com"

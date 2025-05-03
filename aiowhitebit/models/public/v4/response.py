@@ -1,6 +1,6 @@
 """Response models for the WhiteBit Public API v4."""
 
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -8,7 +8,7 @@ from aiowhitebit.models.base import BaseResponse
 
 
 class MaintenanceStatus(BaseModel):
-    """Maintenance status model for v4 API
+    """Maintenance status model for v4 API.
 
     Attributes:
         status: 1 - system operational, 0 - system maintenance
@@ -19,13 +19,14 @@ class MaintenanceStatus(BaseModel):
     model_config = ConfigDict(frozen=True, extra="ignore")
 
     @field_validator("status")
+    @classmethod
     def validate_status(cls, v):
         """Convert any status to string for consistency."""
         return str(v)
 
 
 class Market(BaseModel):
-    """Market information model for v4 API
+    """Market information model for v4 API.
 
     Attributes:
         name: Market pair name
@@ -62,8 +63,8 @@ class Market(BaseModel):
     model_config = ConfigDict(frozen=True, extra="ignore")
 
 
-class MarketInfo(List[Dict[str, Any]]):
-    """Market information response model for v4 API
+class MarketInfo(list[dict[str, Any]]):
+    """Market information response model for v4 API.
 
     This is a list of dictionaries with market information
     """
@@ -72,7 +73,7 @@ class MarketInfo(List[Dict[str, Any]]):
 
 
 class MarketActivityItem(BaseModel):
-    """Market activity item model for v4 API
+    """Market activity item model for v4 API.
 
     Attributes:
         base_id: CoinmarketCap Id of base currency; 0 - if unknown
@@ -95,8 +96,8 @@ class MarketActivityItem(BaseModel):
     model_config = ConfigDict(frozen=True, extra="ignore")
 
 
-class MarketActivity(Dict[str, MarketActivityItem]):
-    """Market activity response model for v4 API
+class MarketActivity(dict[str, MarketActivityItem]):
+    """Market activity response model for v4 API.
 
     This is a dictionary where keys are market names and values are MarketActivityItem objects
     """
@@ -105,7 +106,7 @@ class MarketActivity(Dict[str, MarketActivityItem]):
 
 
 class MinLimit(BaseModel):
-    """Minimum limit model"""
+    """Minimum limit model."""
 
     min: str
 
@@ -113,7 +114,7 @@ class MinLimit(BaseModel):
 
 
 class NetworkTypeLimit(BaseModel):
-    """Network type specific limits (e.g., ERC20)"""
+    """Network type specific limits (e.g., ERC20)."""
 
     ERC20: MinLimit
 
@@ -121,7 +122,7 @@ class NetworkTypeLimit(BaseModel):
 
 
 class Limits(BaseModel):
-    """Limits model for v4 API"""
+    """Limits model for v4 API."""
 
     deposit: NetworkTypeLimit
     withdraw: NetworkTypeLimit
@@ -130,17 +131,17 @@ class Limits(BaseModel):
 
 
 class Networks(BaseModel):
-    """Networks model for v4 API"""
+    """Networks model for v4 API."""
 
     default: Optional[str] = None  # e.g. "ERC20"
-    deposits: Optional[List[str]] = []  # e.g. ["ERC20"]
-    withdraws: Optional[List[str]] = []  # e.g. ["ERC20"]
+    deposits: Optional[list[str]] = []  # e.g. ["ERC20"]
+    withdraws: Optional[list[str]] = []  # e.g. ["ERC20"]
 
     model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class Asset(BaseModel):
-    """Asset model for v4 API"""
+    """Asset model for v4 API."""
 
     name: str  # e.g. "1inch"
     unified_cryptoasset_id: int  # e.g. 8104
@@ -155,21 +156,21 @@ class Asset(BaseModel):
     currency_precision: int  # e.g. 18
     is_memo: bool  # e.g. False
     networks: Networks
-    limits: Dict[str, Dict[str, Dict[str, str]]]  # Nested dict for limits structure
-    confirmations: Optional[Dict[str, int]] = {}  # e.g. {"ERC20": 32}
-    providers: Optional[Dict[str, List[str]]] = None
+    limits: dict[str, dict[str, dict[str, str]]]  # Nested dict for limits structure
+    confirmations: Optional[dict[str, int]] = {}  # e.g. {"ERC20": 32}
+    providers: Optional[dict[str, list[str]]] = None
 
     model_config = ConfigDict(frozen=True, extra="ignore")
 
 
-class AssetStatus(Dict[str, Asset]):
-    """Asset status response model for v4 API"""
+class AssetStatus(dict[str, Asset]):
+    """Asset status response model for v4 API."""
 
     pass
 
 
 class OrderbookItem(BaseModel):
-    """Orderbook item model for v4 API
+    """Orderbook item model for v4 API.
 
     Attributes:
         price: Price level
@@ -183,7 +184,7 @@ class OrderbookItem(BaseModel):
 
 
 class Orderbook(BaseModel):
-    """Orderbook model for v4 API
+    """Orderbook model for v4 API.
 
     Attributes:
         ticker_id: Market Name
@@ -194,14 +195,14 @@ class Orderbook(BaseModel):
 
     ticker_id: str
     timestamp: int
-    asks: List[List[str]]
-    bids: List[List[str]]
+    asks: list[list[str]]
+    bids: list[list[str]]
 
     model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class Depth(Orderbook):
-    """Depth model for v4 API
+    """Depth model for v4 API.
 
     This is the same as Orderbook but retrieves depth price levels within ±2% of the market last price
     """
@@ -210,7 +211,7 @@ class Depth(Orderbook):
 
 
 class RecentTrade(BaseModel):
-    """Recent trade model for v4 API
+    """Recent trade model for v4 API.
 
     Attributes:
         tradeID: A unique ID associated with the trade for the currency pair transaction
@@ -231,8 +232,8 @@ class RecentTrade(BaseModel):
     model_config = ConfigDict(frozen=True, extra="ignore")
 
 
-class RecentTrades(List[RecentTrade]):
-    """Recent trades response model for v4 API
+class RecentTrades(list[RecentTrade]):
+    """Recent trades response model for v4 API.
 
     This is a list of RecentTrade objects
     """
@@ -241,7 +242,7 @@ class RecentTrades(List[RecentTrade]):
 
 
 class FeeFlex(BaseModel):
-    """Fee flex model for v4 API
+    """Fee flex model for v4 API.
 
     Attributes:
         min_fee: Min fee amount
@@ -257,7 +258,7 @@ class FeeFlex(BaseModel):
 
 
 class FeeDetails(BaseModel):
-    """Fee details model for v4 API
+    """Fee details model for v4 API.
 
     Attributes:
         min_amount: Min deposit/withdraw amount. 0 if there is no limitation
@@ -287,7 +288,7 @@ class FeeDetails(BaseModel):
 
 
 class Fee(BaseModel):
-    """Fee model for v4 API
+    """Fee model for v4 API.
 
     Attributes:
         ticker: Currency ticker
@@ -303,9 +304,9 @@ class Fee(BaseModel):
 
     ticker: str
     name: str
-    providers: List[str] = []
-    deposit: Union[FeeDetails, Dict[str, FeeDetails]]
-    withdraw: Union[FeeDetails, Dict[str, FeeDetails]]
+    providers: list[str] = []
+    deposit: Union[FeeDetails, dict[str, FeeDetails]]
+    withdraw: Union[FeeDetails, dict[str, FeeDetails]]
     is_depositable: bool
     is_withdrawal: bool
     is_api_withdrawal: bool
@@ -314,8 +315,8 @@ class Fee(BaseModel):
     model_config = ConfigDict(frozen=True, extra="ignore")
 
 
-class FeeResponse(Dict[str, Fee]):
-    """Fee response model for v4 API
+class FeeResponse(dict[str, Fee]):
+    """Fee response model for v4 API.
 
     This is a dictionary where keys are currency names and values are Fee objects
     """
@@ -324,7 +325,7 @@ class FeeResponse(Dict[str, Fee]):
 
 
 class ServerTime(BaseModel):
-    """Server time model for v4 API
+    """Server time model for v4 API.
 
     Attributes:
         time: Current server time
@@ -335,8 +336,8 @@ class ServerTime(BaseModel):
     model_config = ConfigDict(frozen=True, extra="ignore")
 
 
-class ServerStatus(List[str]):
-    """Server status response model for v4 API
+class ServerStatus(list[str]):
+    """Server status response model for v4 API.
 
     This is a list with a single string "pong"
     """
@@ -344,8 +345,8 @@ class ServerStatus(List[str]):
     pass
 
 
-class CollateralMarkets(List[str]):
-    """Collateral markets response model for v4 API
+class CollateralMarkets(list[str]):
+    """Collateral markets response model for v4 API.
 
     This is a list of market names that are available for collateral trading
     """
@@ -354,7 +355,7 @@ class CollateralMarkets(List[str]):
 
 
 class FuturesBrackets(BaseModel):
-    """Futures brackets model for v4 API
+    """Futures brackets model for v4 API.
 
     Attributes:
         1: Bracket value for leverage 1
@@ -380,7 +381,7 @@ class FuturesBrackets(BaseModel):
 
 
 class FuturesMarket(BaseModel):
-    """Futures market model for v4 API
+    """Futures market model for v4 API.
 
     Attributes:
         ticker_id: Identifier of a ticker with delimiter to separate base/target
@@ -428,19 +429,19 @@ class FuturesMarket(BaseModel):
 
 
 class FuturesMarketsResult(BaseModel):
-    """Futures markets result model for v4 API
+    """Futures markets result model for v4 API.
 
     Attributes:
         result: List of futures markets
     """
 
-    result: List[FuturesMarket]
+    result: list[FuturesMarket]
 
     model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class FuturesMarkets(BaseResponse):
-    """Futures markets response model for v4 API
+    """Futures markets response model for v4 API.
 
     Attributes:
         success: Whether the request was successful
@@ -448,13 +449,13 @@ class FuturesMarkets(BaseResponse):
         result: List of futures markets
     """
 
-    result: List[FuturesMarket]
+    result: list[FuturesMarket]
 
     model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class MiningPoolHashRate(BaseModel):
-    """Mining pool hash rate model"""
+    """Mining pool hash rate model."""
 
     timestamp: int
     hashrate: str
@@ -463,7 +464,7 @@ class MiningPoolHashRate(BaseModel):
 
 
 class MiningPoolBlock(BaseModel):
-    """Mining pool block model"""
+    """Mining pool block model."""
 
     blockFoundAt: int
     blockHeight: int
@@ -472,22 +473,22 @@ class MiningPoolBlock(BaseModel):
 
 
 class MiningPoolData(BaseModel):
-    """Mining pool data model"""
+    """Mining pool data model."""
 
-    assets: List[str]
-    blocks: List[MiningPoolBlock]
-    connectionLinks: List[str]
+    assets: list[str]
+    blocks: list[MiningPoolBlock]
+    connectionLinks: list[str]
     currentHashRate: str
-    last7daysHashRate: List[MiningPoolHashRate]
+    last7daysHashRate: list[MiningPoolHashRate]
     location: str
-    rewardSchemes: List[str]
+    rewardSchemes: list[str]
     workers: int
 
     model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class MiningPoolOverview(BaseModel):
-    """Mining pool overview response model"""
+    """Mining pool overview response model."""
 
     data: MiningPoolData
 

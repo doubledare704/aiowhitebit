@@ -1,14 +1,12 @@
 """Response models for the WhiteBit Public API v1."""
 
-from typing import List
-
 from pydantic import BaseModel
 
 from aiowhitebit.models.base import BasePublicV1Response
 
 
 class Market(BaseModel):
-    """Market information model for v1 API
+    """Market information model for v1 API.
 
     Attributes:
         name: Name of market pair (e.g. BTC_USDT)
@@ -34,17 +32,17 @@ class Market(BaseModel):
 
 
 class MarketInfo(BasePublicV1Response):
-    """Market information response model for v1 API
+    """Market information response model for v1 API.
 
     Attributes:
         result: List of market information items
     """
 
-    result: List[Market]
+    result: list[Market]
 
 
 class Ticker(BaseModel):
-    """Ticker information model for v1 API
+    """Ticker information model for v1 API.
 
     Attributes:
         name: Name of market pair (e.g. BTC_USDT)
@@ -72,17 +70,17 @@ class Ticker(BaseModel):
 
 
 class Tickers(BasePublicV1Response):
-    """Tickers response model for v1 API
+    """Tickers response model for v1 API.
 
     Attributes:
         result: List of ticker items
     """
 
-    result: List[Ticker]
+    result: list[Ticker]
 
 
 class MarketSingle(BaseModel):
-    """Single market activity information model for v1 API
+    """Single market activity information model for v1 API.
 
     Attributes:
         open: Open price for day
@@ -108,7 +106,7 @@ class MarketSingle(BaseModel):
 
 
 class MarketSingleResponse(BasePublicV1Response):
-    """Single market response model for v1 API
+    """Single market response model for v1 API.
 
     Attributes:
         result: Market information for a single market
@@ -118,7 +116,7 @@ class MarketSingleResponse(BasePublicV1Response):
 
 
 class KlineItem(BaseModel):
-    """Kline (candlestick) information model for v1 API
+    """Kline (candlestick) information model for v1 API.
 
     Attributes:
         time_seconds: Time in seconds
@@ -140,27 +138,27 @@ class KlineItem(BaseModel):
 
 
 class Kline(BasePublicV1Response):
-    """Kline response model for v1 API
+    """Kline response model for v1 API.
 
     Attributes:
         result: List of kline (candlestick) items
     """
 
-    result: List[KlineItem]
+    result: list[KlineItem]
 
 
 class Symbols(BasePublicV1Response):
-    """Symbols response model for v1 API
+    """Symbols response model for v1 API.
 
     Attributes:
         result: List of available market symbols (e.g. BTC_USDT)
     """
 
-    result: List[str]
+    result: list[str]
 
 
 class OrderDepthItem(BaseModel):
-    """Order depth item model for v1 API
+    """Order depth item model for v1 API.
 
     Attributes:
         price: Price level
@@ -172,19 +170,19 @@ class OrderDepthItem(BaseModel):
 
 
 class OrderDepth(BaseModel):
-    """Order depth model for v1 API
+    """Order depth model for v1 API.
 
     Attributes:
         asks: List of ask orders (price, amount pairs)
         bids: List of bid orders (price, amount pairs)
     """
 
-    asks: List[OrderDepthItem]
-    bids: List[OrderDepthItem]
+    asks: list[OrderDepthItem]
+    bids: list[OrderDepthItem]
 
 
 class TradeHistoryItem(BaseModel):
-    """Trade history item model for v1 API
+    """Trade history item model for v1 API.
 
     Attributes:
         id: Deal id
@@ -202,10 +200,10 @@ class TradeHistoryItem(BaseModel):
 
 
 class TradeHistory(BasePublicV1Response):
-    """Trade history response model for v1 API
+    """Trade history response model for v1 API.
 
     Attributes:
         result: List of trade history items
     """
 
-    result: List[TradeHistoryItem]
+    result: list[TradeHistoryItem]

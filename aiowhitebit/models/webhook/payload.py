@@ -8,7 +8,7 @@ __all__ = [
     "WebhookRequest",
 ]
 
-from typing import Any, Dict, Optional, Union
+from typing import Any, Optional, Union
 
 from pydantic import BaseModel, field_validator
 
@@ -81,7 +81,19 @@ class TransactionParams(WebhookParams):
     confirmations: Optional[ConfirmationsInfo] = None
 
     @field_validator("method")
+    @classmethod
     def validate_method(cls, v):
+        """Validate that method is one of the allowed values.
+
+        Args:
+            v: The method value to validate.
+
+        Returns:
+            The validated method value.
+
+        Raises:
+            ValueError: If the method is not one of the allowed values.
+        """
         if v is not None and v not in [1, 2]:
             raise ValueError("Method must be 1 (deposit) or 2 (withdraw)")
         return v
@@ -97,11 +109,21 @@ class WebhookRequest(BaseModel):
     """
 
     method: str
-    params: Union[WebhookParams, CodeApplyParams, TransactionParams, Dict[str, Any]]
+    params: Union[WebhookParams, CodeApplyParams, TransactionParams, dict[str, Any]]
     id: str
 
     @field_validator("params", mode="before")
+    @classmethod
     def validate_params(cls, v, info):
+        """Validate and convert params based on the method.
+
+        Args:
+            v: The params value to validate.
+            info: Validation context information.
+
+        Returns:
+            The validated and converted params value.
+        """
         method = info.data.get("method", "")
 
         if method == "code.apply":

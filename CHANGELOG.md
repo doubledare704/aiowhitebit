@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.1] - 2025-05-03
+
+### Fixed
+- Updated field validators to be compatible with Pydantic v2
+- Fixed validator decorators to use @classmethod as required by Pydantic v2
+
 ## [0.2.0] - 2024-07-15
 
 ### Changed

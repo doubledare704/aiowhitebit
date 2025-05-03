@@ -1,7 +1,6 @@
 """Response models for the WhiteBit Public API v2."""
 
 from datetime import datetime
-from typing import List
 
 from pydantic import BaseModel, ConfigDict
 
@@ -10,7 +9,7 @@ from aiowhitebit.models.public.v1.response import OrderDepth
 
 
 class Market(BaseModel):
-    """Market information model for v2 API
+    """Market information model for v2 API.
 
     Attributes:
         name: Name of market pair (e.g. BTC_USDT)
@@ -42,19 +41,19 @@ class Market(BaseModel):
 
 
 class MarketInfo(BasePublicV2Response):
-    """Market information response model for v2 API
+    """Market information response model for v2 API.
 
     Attributes:
         result: List of market information items
     """
 
-    result: List[Market]
+    result: list[Market]
 
     model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class Ticker(BaseModel):
-    """Ticker information model for v2 API
+    """Ticker information model for v2 API.
 
     Attributes:
         lastUpdateTimestamp: Last update timestamp
@@ -80,19 +79,19 @@ class Ticker(BaseModel):
 
 
 class Tickers(BasePublicV2Response):
-    """Tickers response model for v2 API
+    """Tickers response model for v2 API.
 
     Attributes:
         result: List of ticker items
     """
 
-    result: List[Ticker]
+    result: list[Ticker]
 
     model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class RecentTrade(BaseModel):
-    """Recent trade model for v2 API
+    """Recent trade model for v2 API.
 
     Attributes:
         tradeId: Trade ID
@@ -112,19 +111,19 @@ class RecentTrade(BaseModel):
 
 
 class RecentTrades(BasePublicV2Response):
-    """Recent trades response model for v2 API
+    """Recent trades response model for v2 API.
 
     Attributes:
         result: List of recent trade items
     """
 
-    result: List[RecentTrade]
+    result: list[RecentTrade]
 
     model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class Fee(BaseModel):
-    """Fee model for v2 API
+    """Fee model for v2 API.
 
     Attributes:
         makerFee: Maker fee
@@ -138,7 +137,7 @@ class Fee(BaseModel):
 
 
 class FeeResponse(BasePublicV2Response):
-    """Fee response model for v2 API
+    """Fee response model for v2 API.
 
     Attributes:
         result: Fee information
@@ -150,7 +149,7 @@ class FeeResponse(BasePublicV2Response):
 
 
 class Asset(BaseModel):
-    """Asset model for v2 API
+    """Asset model for v2 API.
 
     Attributes:
         asset_name: Asset name
@@ -180,19 +179,19 @@ class Asset(BaseModel):
 
 
 class AssetStatus(BasePublicV2Response):
-    """Asset status response model for v2 API
+    """Asset status response model for v2 API.
 
     Attributes:
         result: List of asset items
     """
 
-    result: List[Asset]
+    result: list[Asset]
 
     model_config = ConfigDict(frozen=True, extra="ignore")
 
 
 class OrderDepthV2(OrderDepth):
-    """Order depth model for v2 API
+    """Order depth model for v2 API.
 
     Attributes:
         asks: List of ask orders (price, amount pairs)

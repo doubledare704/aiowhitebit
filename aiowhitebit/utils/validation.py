@@ -6,7 +6,7 @@ from aiowhitebit.exceptions import WhitebitValidationError
 
 
 def validate_market(market: str) -> None:
-    """Validate market parameter"""
+    """Validate market parameter."""
     if not market or not isinstance(market, str):
         raise WhitebitValidationError("Market parameter must be a non-empty string")
     if "_" not in market:
@@ -14,26 +14,26 @@ def validate_market(market: str) -> None:
 
 
 def validate_amount(amount: str) -> None:
-    """Validate amount parameter"""
+    """Validate amount parameter."""
     try:
         value = Decimal(amount)
         if value <= 0:
             raise WhitebitValidationError("Amount must be greater than 0")
-    except:
-        raise WhitebitValidationError("Amount must be a valid decimal string")
+    except Exception as err:
+        raise WhitebitValidationError("Amount must be a valid decimal string") from err
 
 
 def validate_price(price: str) -> None:
-    """Validate price parameter"""
+    """Validate price parameter."""
     try:
         value = Decimal(price)
         if value <= 0:
             raise WhitebitValidationError("Price must be greater than 0")
-    except:
-        raise WhitebitValidationError("Price must be a valid decimal string")
+    except Exception as err:
+        raise WhitebitValidationError("Price must be a valid decimal string") from err
 
 
 def validate_limit(limit: int, max_limit: int = 1000) -> None:
-    """Validate limit parameter"""
+    """Validate limit parameter."""
     if not isinstance(limit, int) or limit <= 0 or limit > max_limit:
         raise WhitebitValidationError(f"Limit must be an integer between 1 and {max_limit}")

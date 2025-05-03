@@ -374,38 +374,37 @@ class TestPublicV1ClientAsync:
     @pytest.mark.asyncio
     async def test_get_order_depth_query_string_with_limit(self, client, monkeypatch):
         # This test specifically targets line 118 in v1.py
-        
+
         # Track if the _make_request was called with the correct query string
         request_path = None
-        
+
         async def mock_make_request(path, converter=None):
             nonlocal request_path
             request_path = path
             return OrderDepth(asks=[], bids=[])
-            
+
         monkeypatch.setattr(client, "_make_request", mock_make_request)
-        
+
         with pytest.raises(WhitebitValidationError, match="Limit must be between 1 and 100"):
             await client.get_order_depth("BTC_USDT", limit=200)
-
 
     @pytest.mark.asyncio
     async def test_get_trade_history_query_string_with_params(self, client, monkeypatch):
         # This test specifically targets line 140 in v1.py
-        
+
         # Track if the _make_request was called with the correct query string
         request_path = None
-        
+
         async def mock_make_request(path, converter=None):
             nonlocal request_path
             request_path = path
             return TradeHistory(success=True, message=None, result=[])
-            
+
         monkeypatch.setattr(client, "_make_request", mock_make_request)
-        
+
         # Call the method with both parameters
         await client.get_trade_history("BTC_USDT", last_id=10, limit=50)
-        
+
         # Verify the query string contains both parameters
         assert "market=BTC_USDT" in request_path
         assert "lastId=10" in request_path

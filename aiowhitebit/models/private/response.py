@@ -1,7 +1,7 @@
 """Response models for the WhiteBit Private API."""
 
 from decimal import Decimal
-from typing import Any, Dict, List
+from typing import Any
 
 from pydantic import BaseModel
 
@@ -27,7 +27,7 @@ class TradingBalanceList(BaseModel):
         result: List of trading balance items
     """
 
-    result: List[TradingBalanceItem]
+    result: list[TradingBalanceItem]
 
 
 class CreateOrderResponse(BaseModel):
@@ -83,7 +83,7 @@ class ExecutedOrdersResponse(BaseModel):
         result: Dictionary with executed orders information
     """
 
-    result: Dict[str, Any]
+    result: dict[str, Any]
 
 
 class ExecutedDealsResponse(ExecutedOrdersResponse):

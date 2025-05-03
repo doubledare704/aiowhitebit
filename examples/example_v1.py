@@ -2,8 +2,6 @@ import asyncio
 
 from aiowhitebit.clients.public import PublicV1Client
 
-# For backward compatibility, you can also use:
-# from aiowhitebit.clients.public_clients import AioWhitebitPublicV1Client
 
 
 async def main():
@@ -11,19 +9,20 @@ async def main():
     # For backward compatibility, you can also use:
     # client = AioWhitebitPublicV1Client()
     res = await client.get_market_info()
-
+    print(res)
     res = await client.get_tickers()
+    print(res)
 
     res = await client.get_single_market("BTC_USDT")
+    print(res)
 
     res = await client.get_kline_market("BTC_USDT")
+    print(res)
 
     res = await client.get_symbols()
-
-    res = await client.get_order_depth("BTC_USDT")
-
-    res = await client.get_trade_history("BTC_USDT", 6)
     print(res)
+
+    await client.close()
 
 
 loop = asyncio.get_event_loop()

@@ -3,12 +3,15 @@
 import json
 import pprint
 from datetime import datetime
-from typing import Callable, List
+from typing import Any, Callable, Optional, TypeVar
 
 import websocket
 
 from aiowhitebit.constants import BASE_WS_PUBLIC_URL
 from aiowhitebit.models.websocket import WSRequest
+
+# Define a type variable for the websocket callbacks
+WSCallback = TypeVar("WSCallback", bound=Callable[..., Any])
 
 
 def infinite_sequence():
@@ -51,7 +54,7 @@ class SubscribeRequest:
         return WSRequest(method="candles_subscribe", params=[market, interval], id=next(id_gen)).model_dump()
 
     @staticmethod
-    def lastprice_subscribe(markets: List[str]) -> dict:
+    def lastprice_subscribe(markets: list[str]) -> dict:
         """Build a lastprice subscribe request.
 
         Args:
@@ -68,7 +71,7 @@ class SubscribeRequest:
         return WSRequest(method="lastprice_subscribe", params=[*markets], id=next(id_gen)).model_dump()
 
     @staticmethod
-    def market_subscribe(markets: List[str]) -> dict:
+    def market_subscribe(markets: list[str]) -> dict:
         """Build a market subscribe request.
 
         Args:
@@ -85,7 +88,7 @@ class SubscribeRequest:
         return WSRequest(method="market_subscribe", params=[*markets], id=next(id_gen)).model_dump()
 
     @staticmethod
-    def market_today_subscribe(markets: List[str]) -> dict:
+    def market_today_subscribe(markets: list[str]) -> dict:
         """Build a market today subscribe request.
 
         Args:
@@ -102,7 +105,7 @@ class SubscribeRequest:
         return WSRequest(method="marketToday_subscribe", params=[*markets], id=next(id_gen)).model_dump()
 
     @staticmethod
-    def trades_subscribe(markets: List[str]) -> dict:
+    def trades_subscribe(markets: list[str]) -> dict:
         """Build a trades subscribe request.
 
         Args:
@@ -151,9 +154,9 @@ class SubscribeRequest:
 
 def ws_subscribe_builder(
     sub_msg: dict,
-    on_message_callback: Callable = None,
-    on_open_callback: Callable = None,
-    on_close_callback: Callable = None,
+    on_message_callback: Optional[WSCallback] = None,
+    on_open_callback: Optional[WSCallback] = None,
+    on_close_callback: Optional[WSCallback] = None,
 ) -> None:
     """Build a WebSocket subscriber.
 
@@ -186,6 +189,12 @@ def ws_subscribe_builder(
     on_close = on_close_callback or default_on_close
 
     endpoint = BASE_WS_PUBLIC_URL
-    ws = websocket.WebSocketApp(endpoint, on_open=on_open, on_message=on_message, on_close=on_close)
+    # Use type: ignore to tell the type checker to ignore this line
+    ws = websocket.WebSocketApp(
+        endpoint,
+        on_open=on_open,
+        on_message=on_message,
+        on_close=on_close,  # type: ignore
+    )
 
     ws.run_forever()

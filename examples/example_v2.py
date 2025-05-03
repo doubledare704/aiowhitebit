@@ -22,6 +22,7 @@ async def main():
 
     res = await client.get_order_depth("BTC_USDT")
     print(res)
+    await client.close()
 
 
 loop = asyncio.get_event_loop()

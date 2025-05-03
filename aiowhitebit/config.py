@@ -6,7 +6,7 @@ from typing import Final
 
 @dataclass(frozen=True)
 class APIEndpoints:
-    """API endpoints configuration"""
+    """API endpoints configuration."""
 
     # V4 endpoints
     MARKET_INFO: Final = "/api/v4/public/markets"
@@ -44,6 +44,12 @@ class APIEndpoints:
 
 @dataclass(frozen=True)
 class RateLimits:
+    """Rate limits configuration for different API versions.
+
+    This class defines the rate limits for different versions of the WhiteBit API.
+    The values represent the maximum number of requests allowed within the specified time window.
+    """
+
     PUBLIC_V4: Final = 2000  # requests per 10 seconds
     PUBLIC_V2: Final = 1000  # requests per 10 seconds
     PUBLIC_V1: Final = 1000  # requests per 10 seconds

@@ -1,5 +1,7 @@
 """WhiteBit Public API v1 client."""
 
+from typing import Optional
+
 from aiowhitebit.clients.base import BaseClient
 from aiowhitebit.config import APIEndpoints
 from aiowhitebit.converters.public import (
@@ -22,7 +24,7 @@ from aiowhitebit.utils.validation import validate_market
 
 
 class PublicV1Client(BaseClient):
-    """WhiteBit Public API v1 client
+    """WhiteBit Public API v1 client.
 
     This client provides methods to interact with the WhiteBit Public API v1.
     All endpoints return time in Unix-time format and either a JSON object or array.
@@ -32,7 +34,7 @@ class PublicV1Client(BaseClient):
 
     @rate_limit(limit=1000, window=10.0)
     async def get_market_info(self) -> MarketInfo:
-        """Get information about all available markets
+        """Get information about all available markets.
 
         This endpoint retrieves all information about available markets.
         Response is cached for 1 second.
@@ -41,12 +43,12 @@ class PublicV1Client(BaseClient):
 
     @rate_limit(limit=1000, window=10.0)
     async def get_tickers(self) -> Tickers:
-        """Get information about recent trading activity on all markets"""
+        """Get information about recent trading activity on all markets."""
         return await self._make_request(APIEndpoints.TICKERS_V1, converter=convert_tickers_to_object_v1)
 
     @rate_limit(limit=1000, window=10.0)
     async def get_single_market(self, market: str) -> MarketSingleResponse:
-        """Get information about recent trading activity on the requested market"""
+        """Get information about recent trading activity on the requested market."""
         validate_market(market)
         return await self._make_request(
             f"{APIEndpoints.TICKER_V1}?market={market}", converter=lambda x: MarketSingleResponse(**x)
@@ -54,9 +56,14 @@ class PublicV1Client(BaseClient):
 
     @rate_limit(limit=1000, window=10.0)
     async def get_kline_market(
-        self, market: str, start: int = None, end: int = None, interval: str = None, limit: int = None
+        self,
+        market: str,
+        start: Optional[int] = None,
+        end: Optional[int] = None,
+        interval: Optional[str] = None,
+        limit: Optional[int] = None,
     ) -> Kline:
-        """Get information about market kline (candlestick)"""
+        """Get kline data for the requested market."""
         validate_market(market)
 
         # Validate interval if provided
@@ -91,12 +98,12 @@ class PublicV1Client(BaseClient):
 
     @rate_limit(limit=1000, window=10.0)
     async def get_symbols(self) -> Symbols:
-        """Get information about all available markets for trading"""
+        """Get information about all available markets for trading."""
         return await self._make_request(APIEndpoints.SYMBOLS_V1, converter=lambda x: Symbols(**x))
 
     @rate_limit(limit=1000, window=10.0)
-    async def get_order_depth(self, market: str, limit: int = None) -> OrderDepth:
-        """Get order book for the requested market
+    async def get_order_depth(self, market: str, limit: Optional[int] = None) -> OrderDepth:
+        """Get order book for the requested market.
 
         Args:
             market: Available market (e.g. BTC_USDT)
@@ -120,20 +127,10 @@ class PublicV1Client(BaseClient):
         return await self._make_request(query_string, converter=convert_order_depth_to_object_v1)
 
     @rate_limit(limit=1000, window=10.0)
-    async def get_trade_history(self, market: str, last_id: int = None, limit: int = None) -> TradeHistory:
-        """Get trade history for the requested market
-
-        Args:
-            market: Available market (e.g. BTC_USDT)
-            last_id: Return trades with ID > last_id
-            limit: Limit of results. Default: 50, Max: 100
-
-        Returns:
-            TradeHistory: Trade history data
-
-        Raises:
-            WhitebitValidationError: If market is empty or parameters are invalid
-        """
+    async def get_trade_history(
+        self, market: str, last_id: Optional[int] = None, limit: Optional[int] = None
+    ) -> TradeHistory:
+        """Get trade history for the requested market."""
         validate_market(market)
 
         if limit is not None and (limit < 1 or limit > 100):

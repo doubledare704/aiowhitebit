@@ -20,3 +20,22 @@ from aiowhitebit.models.public.v1.response import (
     TradeHistory,
     TradeHistoryItem,
 )
+
+__all__ = [
+    "Kline",
+    "KlineItem",
+    "KlineRequest",
+    "Market",
+    "MarketInfo",
+    "MarketSingle",
+    "MarketSingleResponse",
+    "OrderDepth",
+    "OrderDepthItem",
+    "OrderDepthRequest",
+    "Symbols",
+    "Ticker",
+    "Tickers",
+    "TradeHistory",
+    "TradeHistoryItem",
+    "TradeHistoryRequest",
+]

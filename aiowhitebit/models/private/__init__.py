@@ -21,3 +21,23 @@ from aiowhitebit.models.private.response import (
     TradingBalanceItem,
     TradingBalanceList,
 )
+
+__all__ = [
+    "ActiveOrdersRequest",
+    "CancelOrderRequest",
+    "CancelOrderResponse",
+    "CreateLimitOrderRequest",
+    "CreateOrderResponse",
+    "CreateStockMarketOrderRequest",
+    "CreateStopLimitOrderRequest",
+    "CreateStopMarketOrderRequest",
+    "ExecutedDealsResponse",
+    "ExecutedOrderDealsRequest",
+    "ExecutedOrderHistoryRequest",
+    "ExecutedOrdersByMarket",
+    "ExecutedOrdersByMarketResponse",
+    "ExecutedOrdersResponse",
+    "OrderType",
+    "TradingBalanceItem",
+    "TradingBalanceList",
+]

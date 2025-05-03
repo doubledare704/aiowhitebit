@@ -24,3 +24,16 @@ from aiowhitebit.converters.public.v4 import (
     convert_orderbook_to_object,
     convert_recent_trades_to_object,
 )
+
+__all__ = [
+    "convert_asset_status_to_object",
+    "convert_asset_status_to_object_v4",
+    "convert_kline_to_object_v1",
+    "convert_market_activity_to_object",
+    "convert_order_depth_to_object_v1",
+    "convert_order_depth_to_object_v2",
+    "convert_orderbook_to_object",
+    "convert_recent_trades_to_object",
+    "convert_tickers_to_object_v1",
+    "gen_order",
+]

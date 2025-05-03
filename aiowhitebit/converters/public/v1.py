@@ -1,7 +1,5 @@
 """Converters for the WhiteBit Public API v1."""
 
-from typing import List
-
 from aiowhitebit.models.public.v1.response import (
     Kline,
     KlineItem,
@@ -29,7 +27,9 @@ def convert_tickers_to_object(json_body: dict) -> Tickers:
         item = Ticker(**ticker_body)
         items.append(item)
 
-    return Tickers(success=json_body.get("success"), message=json_body.get("message"), result=items)
+    success = bool(json_body.get("success", False))
+    message = json_body.get("message", "")
+    return Tickers(success=success, message=message, result=items)
 
 
 def convert_kline_to_object(json_body: dict) -> Kline:
@@ -49,10 +49,12 @@ def convert_kline_to_object(json_body: dict) -> Kline:
         )
         items.append(kline)
 
-    return Kline(success=json_body.get("success"), message=json_body.get("message"), result=items)
+    success = bool(json_body.get("success", False))
+    message = json_body.get("message", "")
+    return Kline(success=success, message=message, result=items)
 
 
-def gen_order(arr: List) -> List[OrderDepthItem]:
+def gen_order(arr: list) -> list[OrderDepthItem]:
     """Generate a list of OrderDepthItem objects from a list of price-amount pairs.
 
     Args:

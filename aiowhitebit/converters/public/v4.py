@@ -1,6 +1,6 @@
 """Converters for the WhiteBit Public API v4."""
 
-from typing import Any, Dict, List
+from typing import Any
 
 from aiowhitebit.models.public.v4.response import (
     Asset,
@@ -55,7 +55,7 @@ def convert_orderbook_to_object(json_body: dict) -> Orderbook:
     return Orderbook(**json_body)
 
 
-def convert_recent_trades_to_object(json_body: List[Dict[str, Any]]) -> RecentTrades:
+def convert_recent_trades_to_object(json_body: list[dict[str, Any]]) -> RecentTrades:
     """Convert recent trades JSON response to RecentTrades object.
 
     Args:

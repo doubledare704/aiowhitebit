@@ -1,6 +1,6 @@
 """Converters for the WhiteBit Private API v4."""
 
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 from aiowhitebit.models.private.response import (
     CancelOrderResponse,
@@ -49,7 +49,7 @@ def convert_executed_orders_to_dto(json_body: dict) -> ExecutedOrdersResponse:
     return ExecutedOrdersResponse(result=json_body)
 
 
-def convert_active_orders_to_dto(json_list: list) -> List[CreateOrderResponse]:
+def convert_active_orders_to_dto(json_list: list) -> list[CreateOrderResponse]:
     """Convert active orders JSON response to a list of CreateOrderResponse objects.
 
     Args:

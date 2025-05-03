@@ -1,7 +1,7 @@
 """Request models for the WhiteBit Private API."""
 
 from enum import Enum
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import BaseModel, field_validator
 
@@ -36,7 +36,19 @@ class CreateLimitOrderRequest(BaseModel):
     clientOrderId: Optional[str] = None
 
     @field_validator("market", "amount", "price")
-    def validate_required_fields(cls, v):
+    @classmethod
+    def validate_required_fields(cls, v: Any) -> Any:
+        """Validate that required fields are not empty.
+
+        Args:
+            v: The value to validate.
+
+        Returns:
+            The validated value.
+
+        Raises:
+            ValueError: If the value is empty.
+        """
         if not v:
             raise ValueError("This field is required and cannot be empty")
         return v
@@ -58,7 +70,19 @@ class CreateStockMarketOrderRequest(BaseModel):
     clientOrderId: Optional[str] = None
 
     @field_validator("market", "amount")
-    def validate_required_fields(cls, v):
+    @classmethod
+    def validate_required_fields(cls, v: Any) -> Any:
+        """Validate that required fields are not empty.
+
+        Args:
+            v: The value to validate.
+
+        Returns:
+            The validated value.
+
+        Raises:
+            ValueError: If the value is empty.
+        """
         if not v:
             raise ValueError("This field is required and cannot be empty")
         return v
@@ -84,7 +108,19 @@ class CreateStopLimitOrderRequest(BaseModel):
     clientOrderId: Optional[str] = None
 
     @field_validator("market", "amount", "price", "activation_price")
-    def validate_required_fields(cls, v):
+    @classmethod
+    def validate_required_fields(cls, v: Any) -> Any:
+        """Validate that required fields are not empty.
+
+        Args:
+            v: The value to validate.
+
+        Returns:
+            The validated value.
+
+        Raises:
+            ValueError: If the value is empty.
+        """
         if not v:
             raise ValueError("This field is required and cannot be empty")
         return v
@@ -108,7 +144,19 @@ class CreateStopMarketOrderRequest(BaseModel):
     clientOrderId: Optional[str] = None
 
     @field_validator("market", "amount", "activation_price")
-    def validate_required_fields(cls, v):
+    @classmethod
+    def validate_required_fields(cls, v: Any) -> Any:
+        """Validate that required fields are not empty.
+
+        Args:
+            v: The value to validate.
+
+        Returns:
+            The validated value.
+
+        Raises:
+            ValueError: If the value is empty.
+        """
         if not v:
             raise ValueError("This field is required and cannot be empty")
         return v
@@ -126,13 +174,37 @@ class CancelOrderRequest(BaseModel):
     orderId: int
 
     @field_validator("market")
-    def validate_market(cls, v):
+    @classmethod
+    def validate_market(cls, v: Any) -> Any:
+        """Validate that market parameter is not empty.
+
+        Args:
+            v: The market value to validate.
+
+        Returns:
+            The validated market value.
+
+        Raises:
+            ValueError: If the market value is empty.
+        """
         if not v:
             raise ValueError("Market parameter is required")
         return v
 
     @field_validator("orderId")
-    def validate_order_id(cls, v):
+    @classmethod
+    def validate_order_id(cls, v: Any) -> Any:
+        """Validate that order ID is a positive integer.
+
+        Args:
+            v: The order ID to validate.
+
+        Returns:
+            The validated order ID.
+
+        Raises:
+            ValueError: If the order ID is not a positive integer.
+        """
         if v <= 0:
             raise ValueError("Order ID must be a positive integer")
         return v
@@ -152,19 +224,55 @@ class ActiveOrdersRequest(BaseModel):
     offset: Optional[int] = None
 
     @field_validator("market")
-    def validate_market(cls, v):
+    @classmethod
+    def validate_market(cls, v: Any) -> Any:
+        """Validate that market parameter is not empty.
+
+        Args:
+            v: The market value to validate.
+
+        Returns:
+            The validated market value.
+
+        Raises:
+            ValueError: If the market value is empty.
+        """
         if not v:
             raise ValueError("Market parameter is required")
         return v
 
     @field_validator("limit")
-    def validate_limit(cls, v):
+    @classmethod
+    def validate_limit(cls, v: Any) -> Any:
+        """Validate that limit is within allowed range.
+
+        Args:
+            v: The limit value to validate.
+
+        Returns:
+            The validated limit value.
+
+        Raises:
+            ValueError: If the limit is not within the allowed range.
+        """
         if v is not None and (v < 1 or v > 100):
             raise ValueError("Limit must be between 1 and 100")
         return v
 
     @field_validator("offset")
-    def validate_offset(cls, v):
+    @classmethod
+    def validate_offset(cls, v: Any) -> Any:
+        """Validate that offset is within allowed range.
+
+        Args:
+            v: The offset value to validate.
+
+        Returns:
+            The validated offset value.
+
+        Raises:
+            ValueError: If the offset is not within the allowed range.
+        """
         if v is not None and (v < 0 or v > 10000):
             raise ValueError("Offset must be between 0 and 10000")
         return v
@@ -182,7 +290,16 @@ class ExecutedOrderHistoryRequest(ActiveOrdersRequest):
     market: Optional[str] = None
 
     @field_validator("market")
-    def validate_market(cls, v):
+    @classmethod
+    def validate_market(cls, v: Any) -> Any:
+        """Validate market parameter (optional for this request).
+
+        Args:
+            v: The market value to validate.
+
+        Returns:
+            The validated market value.
+        """
         # Market is optional for this request
         return v
 
@@ -201,19 +318,55 @@ class ExecutedOrderDealsRequest(BaseModel):
     offset: Optional[int] = None
 
     @field_validator("orderId")
-    def validate_order_id(cls, v):
+    @classmethod
+    def validate_order_id(cls, v: Any) -> Any:
+        """Validate that order ID is a positive integer.
+
+        Args:
+            v: The order ID to validate.
+
+        Returns:
+            The validated order ID.
+
+        Raises:
+            ValueError: If the order ID is not a positive integer.
+        """
         if v <= 0:
             raise ValueError("Order ID must be a positive integer")
         return v
 
     @field_validator("limit")
-    def validate_limit(cls, v):
+    @classmethod
+    def validate_limit(cls, v: Any) -> Any:
+        """Validate that limit is within allowed range.
+
+        Args:
+            v: The limit value to validate.
+
+        Returns:
+            The validated limit value.
+
+        Raises:
+            ValueError: If the limit is not within the allowed range.
+        """
         if v is not None and (v < 1 or v > 100):
             raise ValueError("Limit must be between 1 and 100")
         return v
 
     @field_validator("offset")
-    def validate_offset(cls, v):
+    @classmethod
+    def validate_offset(cls, v: Any) -> Any:
+        """Validate that offset is within allowed range.
+
+        Args:
+            v: The offset value to validate.
+
+        Returns:
+            The validated offset value.
+
+        Raises:
+            ValueError: If the offset is not within the allowed range.
+        """
         if v is not None and (v < 0 or v > 10000):
             raise ValueError("Offset must be between 0 and 10000")
         return v

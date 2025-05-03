@@ -18,7 +18,7 @@ from aiowhitebit.models.public.v2 import (
 
 
 class PublicV2Client(BaseClient):
-    """WhiteBit Public API v2 client
+    """WhiteBit Public API v2 client.
 
     This client provides methods to interact with the WhiteBit Public API v2.
     All endpoints return time in Unix-time format and either a JSON object or array.
@@ -30,7 +30,7 @@ class PublicV2Client(BaseClient):
         self,
         base_url: str = BASE_URL,
     ) -> None:
-        """Initialize the WhiteBit Public API v2 client
+        """Initialize the WhiteBit Public API v2 client.
 
         Args:
             base_url: Base URL for the WhiteBit API. Defaults to the official WhiteBit API URL.
@@ -38,7 +38,7 @@ class PublicV2Client(BaseClient):
         super().__init__(base_url)
 
     async def get_market_info(self) -> MarketInfo:
-        """Get information about all available markets
+        """Get information about all available markets.
 
         This endpoint retrieves all information about available markets.
         Response is cached for 1 second.
@@ -55,7 +55,7 @@ class PublicV2Client(BaseClient):
         return await self._make_request(APIEndpoints.MARKET_INFO_V2, converter=lambda x: MarketInfo(**x))
 
     async def get_tickers(self) -> Tickers:
-        """Get information about recent trading activity on all markets
+        """Get information about recent trading activity on all markets.
 
         This endpoint retrieves information about recent trading activity on all markets.
         Response is cached for 1 second.
@@ -72,7 +72,7 @@ class PublicV2Client(BaseClient):
         return await self._make_request(APIEndpoints.TICKER_V2, converter=lambda x: Tickers(**x))
 
     async def get_recent_trades(self, market: str) -> RecentTrades:
-        """Get recent trades for the requested market
+        """Get recent trades for the requested market.
 
         This endpoint retrieves recent trades for the requested market.
         Response is cached for 1 second.
@@ -97,7 +97,7 @@ class PublicV2Client(BaseClient):
         )
 
     async def get_fee(self) -> FeeResponse:
-        """Get fee information
+        """Get fee information.
 
         This endpoint retrieves fee information.
         Response is cached for 1 second.
@@ -114,7 +114,7 @@ class PublicV2Client(BaseClient):
         return await self._make_request(APIEndpoints.FEE_V2, converter=lambda x: FeeResponse(**x))
 
     async def get_asset_status_list(self) -> AssetStatus:
-        """Get asset status list
+        """Get asset status list.
 
         This endpoint retrieves asset status list.
         Response is cached for 1 second.
@@ -131,7 +131,7 @@ class PublicV2Client(BaseClient):
         return await self._make_request(APIEndpoints.ASSET_STATUS_V2, converter=convert_asset_status_to_object)
 
     async def get_order_depth(self, market: str) -> OrderDepthV2:
-        """Get the current order book as two arrays (bids / asks)
+        """Get the current order book as two arrays (bids / asks).
 
         This endpoint retrieves the current order book as two arrays (bids / asks).
         Response is cached for 100 ms.

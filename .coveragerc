@@ -1,6 +1,6 @@
 [run]
 source = aiowhitebit
-omit = 
+omit =
     */tests/*
     */venv/*
     */setup.py

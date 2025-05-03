@@ -9,3 +9,16 @@ from aiowhitebit.clients.websocket import (
     get_public_websocket_client,
     ws_subscribe_builder,
 )
+
+__all__ = [
+    "PrivateV4Client",
+    "PublicV1Client",
+    "PublicV2Client",
+    "PublicV4Client",
+    "PublicWebSocketClient",
+    "SubscribeRequest",
+    "WebhookDataLoader",
+    "get_public_websocket_client",
+    "get_webhook_data_loader",
+    "ws_subscribe_builder",
+]

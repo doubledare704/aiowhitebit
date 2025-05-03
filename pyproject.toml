@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "aiowhitebit"
-version = "0.2.0"  # Bumping minor version for feature change
+version = "0.2.1"  # Bumping patch version for bug fixes
 description = "Async Python client for WhiteBit API"
 readme = "README.md"
 authors = [
@@ -60,7 +60,7 @@ select = [
     "RUF",  # Ruff-specific rules
 ]
 ignore = [
-    "D203",  # one-blank-line-before-class
+    "N815",  # mixedCase variable names
     "D212",  # multi-line-summary-first-line
 ]
 
@@ -90,6 +90,8 @@ exclude = [
     "tests",
     "examples"
 ]
+venvPath = "."
+venv = ".venv"
 typeCheckingMode = "basic"
 useLibraryCodeForTypes = true
 reportMissingImports = true

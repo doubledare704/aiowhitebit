@@ -10,7 +10,7 @@ import hashlib
 import hmac
 import json
 import logging
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Optional
 
 from multidict import CIMultiDictProxy
 
@@ -24,7 +24,9 @@ class WebhookDataLoader:
     This class provides methods to validate webhook requests and handle different webhook methods.
     """
 
-    def __init__(self, webhook_key: str = WEBHOOK_KEY, webhook_secret_key: str = WEBHOOK_SECRET_KEY) -> None:
+    def __init__(
+        self, webhook_key: str = WEBHOOK_KEY or "", webhook_secret_key: str = WEBHOOK_SECRET_KEY or ""
+    ) -> None:
         """Initialize the webhook data loader.
 
         Args:
@@ -39,7 +41,7 @@ class WebhookDataLoader:
             "X-TXC-SIGNATURE",
         ]
         self.current_request: Optional[WebhookRequest] = None
-        self._handlers: Dict[str, Callable[[WebhookRequest], Any]] = {}
+        self._handlers: dict[str, Callable[[WebhookRequest], Any]] = {}
 
         # Register default handlers
         self.register_handler("code.apply", self._handle_code_apply)
@@ -238,7 +240,7 @@ class WebhookDataLoader:
 
 
 def get_webhook_data_loader(
-    webhook_key: str = WEBHOOK_KEY, webhook_secret_key: str = WEBHOOK_SECRET_KEY
+    webhook_key: str = WEBHOOK_KEY or "", webhook_secret_key: str = WEBHOOK_SECRET_KEY or ""
 ) -> WebhookDataLoader:
     """Get a webhook data loader instance.
 

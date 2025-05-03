@@ -2,7 +2,7 @@
 
 import json
 import logging
-from typing import Optional
+from typing import Any, Optional
 
 import websockets
 
@@ -17,16 +17,16 @@ class BaseWebSocketClient:
     """
 
     def __init__(self, uri: str) -> None:
-        """Initialize the WebSocket client
+        """Initialize the WebSocket client.
 
         Args:
             uri: WebSocket URI
         """
         self.uri = uri
-        self.connection: Optional[websockets.WebSocketClientProtocol] = None
+        self.connection: Optional[Any] = None
 
     async def connect(self):
-        """Connect to the WebSocket server
+        """Connect to the WebSocket server.
 
         Establishes a connection to the WebSocket server if not already connected.
         """
@@ -34,7 +34,7 @@ class BaseWebSocketClient:
             self.connection = await websockets.connect(self.uri)
 
     async def close(self):
-        """Close the WebSocket connection
+        """Close the WebSocket connection.
 
         Closes the connection to the WebSocket server if it exists.
         """
@@ -42,7 +42,7 @@ class BaseWebSocketClient:
             await self.connection.close()
 
     async def send_message(self, request: dict) -> dict:
-        """Send a message to the WebSocket server
+        """Send a message to the WebSocket server.
 
         Args:
             request: Request to send
@@ -51,6 +51,9 @@ class BaseWebSocketClient:
             Response from the server
         """
         await self.connect()
+        if self.connection is None:
+            raise ConnectionError("Failed to establish WebSocket connection")
+
         await self.connection.send(json.dumps(request))
         logging.info(f">>> {request}")
 
@@ -61,21 +64,21 @@ class BaseWebSocketClient:
 
 
 class PublicWebSocketClient:
-    """WhiteBit Public WebSocket API client
+    """WhiteBit Public WebSocket API client.
 
     This client provides methods to interact with the WhiteBit Public WebSocket API.
     """
 
-    def __init__(self, ws: BaseWebSocketClient = None) -> None:
-        """Initialize the WhiteBit Public WebSocket API client
+    def __init__(self, ws: Optional[BaseWebSocketClient] = None) -> None:
+        """Initialize the WhiteBit Public WebSocket API client.
 
         Args:
             ws: WebSocket client. If None, a new client will be created.
         """
-        self.ws = ws or BaseWebSocketClient(BASE_WS_PUBLIC_URL)
+        self.ws = ws if ws is not None else BaseWebSocketClient(BASE_WS_PUBLIC_URL)
 
     async def base_ws_requester(self, req: WSRequest) -> WSResponse:
-        """Base method for making WebSocket requests
+        """Base method for making WebSocket requests.
 
         Args:
             req: WebSocket request
@@ -87,7 +90,7 @@ class PublicWebSocketClient:
         return WSResponse(**response)
 
     async def ping(self) -> WSResponse:
-        """Ping the server
+        """Ping the server.
 
         Returns:
             WebSocket response
@@ -101,7 +104,7 @@ class PublicWebSocketClient:
         return await self.base_ws_requester(WSRequest(method="ping", params=[]))
 
     async def time(self) -> WSResponse:
-        """Get server time
+        """Get server time.
 
         Returns:
             WebSocket response with server time
@@ -115,7 +118,7 @@ class PublicWebSocketClient:
         return await self.base_ws_requester(WSRequest(method="time", params=[]))
 
     async def kline(self, market: str, start_time: int, end_time: int, interval_secs: int) -> WSResponse:
-        """Get kline (candlestick) data
+        """Get kline (candlestick) data.
 
         Args:
             market: Market (e.g. BTC_USDT)
@@ -140,7 +143,7 @@ class PublicWebSocketClient:
         )
 
     async def last_price(self, market: str) -> WSResponse:
-        """Get last price for a market
+        """Get last price for a market.
 
         Args:
             market: Market (e.g. BTC_USDT)
@@ -157,7 +160,7 @@ class PublicWebSocketClient:
         return await self.base_ws_requester(WSRequest(method="lastprice_request", params=[market]))
 
     async def market_stats(self, market: str, period_secs: int) -> WSResponse:
-        """Get market statistics
+        """Get market statistics.
 
         Args:
             market: Market (e.g. BTC_USDT)
@@ -175,7 +178,7 @@ class PublicWebSocketClient:
         return await self.base_ws_requester(WSRequest(method="market_request", params=[market, period_secs]))
 
     async def market_stats_today(self, market: str) -> WSResponse:
-        """Get market statistics for current day UTC
+        """Get market statistics for current day UTC.
 
         Args:
             market: Market (e.g. BTC_USDT)
@@ -192,7 +195,7 @@ class PublicWebSocketClient:
         return await self.base_ws_requester(WSRequest(method="marketToday_query", params=[market]))
 
     async def market_trades(self, market: str, limit: int, largest_id: int) -> WSResponse:
-        """Get market trades
+        """Get market trades.
 
         Args:
             market: Market (e.g. BTC_USDT)
@@ -211,7 +214,7 @@ class PublicWebSocketClient:
         return await self.base_ws_requester(WSRequest(method="trades_request", params=[market, limit, largest_id]))
 
     async def market_depth(self, market: str, limit: int, intervals: str) -> WSResponse:
-        """Get market depth
+        """Get market depth.
 
         Args:
             market: Market (e.g. BTC_USDT)
@@ -231,7 +234,7 @@ class PublicWebSocketClient:
         return await self.base_ws_requester(WSRequest(method="depth_request", params=[market, limit, intervals]))
 
     async def close(self):
-        """Close the WebSocket connection
+        """Close the WebSocket connection.
 
         Example:
             ```python
@@ -244,7 +247,7 @@ class PublicWebSocketClient:
 
 
 def get_public_websocket_client() -> PublicWebSocketClient:
-    """Get a new PublicWebSocketClient
+    """Get a new PublicWebSocketClient.
 
     Returns:
         PublicWebSocketClient

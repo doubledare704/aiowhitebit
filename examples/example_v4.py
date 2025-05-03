@@ -60,6 +60,7 @@ async def main():
     print(f"Number of futures markets: {len(futures_markets.result)}")
     print(f"First futures market: {futures_markets.result[0].ticker_id}")
 
+    await client.close()
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()

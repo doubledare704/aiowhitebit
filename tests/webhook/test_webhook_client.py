@@ -2,14 +2,13 @@ import base64
 import hashlib
 import hmac
 import json
-import unittest
 from unittest.mock import MagicMock, patch
 
 import pytest
 from multidict import CIMultiDict, CIMultiDictProxy
 
 from aiowhitebit.clients.webhook import WebhookDataLoader
-from aiowhitebit.models.webhook import CodeApplyParams, TransactionParams, WebhookRequest, ConfirmationsInfo
+from aiowhitebit.models.webhook import WebhookRequest
 
 
 class TestWebhookDataLoader:
@@ -37,7 +36,7 @@ class TestWebhookDataLoader:
                 "transactionHash": "0x123456789abcdef",
                 "fee": "0.0001",
                 "confirmations": 3,
-            }
+            },
         }
 
     @pytest.fixture
@@ -46,11 +45,7 @@ class TestWebhookDataLoader:
 
     @pytest.fixture
     def valid_signature(self, webhook_secret_key, valid_payload):
-        return hmac.new(
-            webhook_secret_key.encode("ascii"),
-            valid_payload,
-            hashlib.sha512
-        ).hexdigest()
+        return hmac.new(webhook_secret_key.encode("ascii"), valid_payload, hashlib.sha512).hexdigest()
 
     @pytest.fixture
     def valid_headers(self, webhook_key, valid_payload, valid_signature):
@@ -77,7 +72,7 @@ class TestWebhookDataLoader:
 
         # Register the handler
         webhook_loader.register_handler("test.method", test_handler)
-        
+
         # Verify the handler was registered
         assert "test.method" in webhook_loader._handlers
         assert webhook_loader._handlers["test.method"] == test_handler
@@ -90,7 +85,7 @@ class TestWebhookDataLoader:
         # Create headers with missing keys
         multi_dict = CIMultiDict({"X-TXC-APIKEY": "value"})
         headers = CIMultiDictProxy(multi_dict)
-        
+
         # Test validation with missing headers
         assert webhook_loader.validate_headers(headers) is False
 
@@ -99,7 +94,7 @@ class TestWebhookDataLoader:
         multi_dict = CIMultiDict(dict(valid_headers))
         multi_dict["X-TXC-APIKEY"] = "invalid_key"
         headers = CIMultiDictProxy(multi_dict)
-        
+
         # Test validation with invalid API key
         assert webhook_loader.validate_headers(headers) is False
 
@@ -108,7 +103,7 @@ class TestWebhookDataLoader:
         multi_dict = CIMultiDict(dict(valid_headers))
         multi_dict["X-TXC-PAYLOAD"] = "not_base64_encoded"
         headers = CIMultiDictProxy(multi_dict)
-        
+
         # Test validation with invalid payload
         assert webhook_loader.validate_headers(headers) is False
 
@@ -117,7 +112,7 @@ class TestWebhookDataLoader:
         payload_dict = {"id": "123"}  # Missing method and params
         payload = base64.b64encode(json.dumps(payload_dict).encode("ascii"))
         signature = hmac.new(webhook_secret_key.encode("ascii"), payload, hashlib.sha512).hexdigest()
-        
+
         headers = {
             "X-TXC-APIKEY": webhook_key,
             "X-TXC-PAYLOAD": payload,
@@ -125,7 +120,7 @@ class TestWebhookDataLoader:
         }
         multi_dict = CIMultiDict(headers)
         headers = CIMultiDictProxy(multi_dict)
-        
+
         # Test validation with missing payload keys
         assert webhook_loader.validate_headers(headers) is False
 
@@ -134,7 +129,7 @@ class TestWebhookDataLoader:
         multi_dict = CIMultiDict(dict(valid_headers))
         multi_dict["X-TXC-SIGNATURE"] = "invalid_signature"
         headers = CIMultiDictProxy(multi_dict)
-        
+
         # Test validation with invalid signature
         assert webhook_loader.validate_headers(headers) is False
 
@@ -151,16 +146,16 @@ class TestWebhookDataLoader:
                 "fee": "0.0001",
                 "confirmations": {"count": 3, "actual": 3, "required": 2},
                 "createdAt": 1672531200,  # Unix timestamp for 2023-01-01T00:00:00Z
-                "currency": "BTC"
-            }
+                "currency": "BTC",
+            },
         )
-        
+
         # Mock the handler
         webhook_loader._handlers["deposit.accepted"] = MagicMock(return_value="test_result")
-        
+
         # Test handling the request
         result = webhook_loader.handle_request(req)
-        
+
         # Verify the handler was called with the request
         webhook_loader._handlers["deposit.accepted"].assert_called_once_with(req)
         assert result == "test_result"
@@ -168,12 +163,8 @@ class TestWebhookDataLoader:
 
     def test_handle_request_no_handler(self, webhook_loader):
         # Create a test request with a method that has no handler
-        req = WebhookRequest(
-            id="123",
-            method="unknown.method",
-            params={}
-        )
-        
+        req = WebhookRequest(id="123", method="unknown.method", params={})
+
         # Test handling the request with no handler
         with pytest.raises(ValueError, match="No handler registered for method: unknown.method"):
             webhook_loader.handle_request(req)
@@ -181,15 +172,11 @@ class TestWebhookDataLoader:
     @patch("logging.info")
     def test_handle_code_apply(self, mock_logging, webhook_loader):
         # Create a test request
-        req = WebhookRequest(
-            id="123",
-            method="code.apply",
-            params={"code": "TEST123", "user_id": 456}
-        )
-        
+        req = WebhookRequest(id="123", method="code.apply", params={"code": "TEST123", "user_id": 456})
+
         # Test handling the request
         webhook_loader._handle_code_apply(req)
-        
+
         # Verify logging was called
         mock_logging.assert_called_once_with("Code applied: TEST123")
 
@@ -197,16 +184,16 @@ class TestWebhookDataLoader:
     def test_handle_code_apply_invalid_params(self, mock_logging, webhook_loader):
         # For this test, we need to create a WebhookRequest with a method of code.apply
         # but with params that will fail validation when passed to CodeApplyParams
-        
+
         # Create a mock request object directly to bypass validation
         req = MagicMock(spec=WebhookRequest)
         req.id = "123"
         req.method = "code.apply"
         req.params = {"invalid_param": "value"}  # Missing required fields
-        
+
         # Test handling the request with invalid params
         webhook_loader._handle_code_apply(req)
-        
+
         # Verify warning was logged
         mock_logging.assert_called_once()
         assert "Invalid params type for code.apply" in mock_logging.call_args[0][0]
@@ -225,13 +212,13 @@ class TestWebhookDataLoader:
                 "fee": "0.0001",
                 "confirmations": {"count": 3, "actual": 3, "required": 2},
                 "createdAt": 1672531200,  # Unix timestamp for 2023-01-01T00:00:00Z
-                "currency": "BTC"
-            }
+                "currency": "BTC",
+            },
         )
-        
+
         # Test handling the request
         webhook_loader._handle_deposit_accepted(req)
-        
+
         # Verify logging was called
         mock_logging.assert_called_once_with("Deposit accepted: 0.1 BTC to bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh")
 
@@ -249,8 +236,8 @@ class TestWebhookDataLoader:
                 "fee": "0.0001",
                 "confirmations": {"count": 3, "actual": 3, "required": 2},
                 "createdAt": 1672531200,  # Unix timestamp for 2023-01-01T00:00:00Z
-                "currency": "BTC"
-            }
+                "currency": "BTC",
+            },
         )
         webhook_loader._handle_deposit_updated(req)
         mock_logging.assert_called_once_with("Deposit updated: 0.1 BTC to bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh")
@@ -268,8 +255,10 @@ class TestWebhookDataLoader:
                 "fee": "0.0001",
                 "confirmations": {"count": 3, "actual": 3, "required": 2},
                 "createdAt": 1672531200,  # Unix timestamp for 2023-01-01T00:00:00Z
-                "currency": "BTC"
-            }
+                "currency": "BTC",
+            },
         )
         webhook_loader._handle_withdraw_unconfirmed(req)
-        mock_logging.assert_called_once_with("Withdraw unconfirmed: 0.1 BTC from bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh")
+        mock_logging.assert_called_once_with(
+            "Withdraw unconfirmed: 0.1 BTC from bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh"
+        )

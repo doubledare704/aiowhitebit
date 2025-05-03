@@ -25,3 +25,27 @@ from aiowhitebit.models.public.v4.response import (
     ServerStatus,
     ServerTime,
 )
+
+__all__ = [
+    "Asset",
+    "AssetStatus",
+    "CollateralMarkets",
+    "Depth",
+    "Fee",
+    "FeeResponse",
+    "FuturesMarket",
+    "FuturesMarkets",
+    "MaintenanceStatus",
+    "Market",
+    "MarketActivity",
+    "MarketInfo",
+    "MiningPoolOverview",
+    "Orderbook",
+    "OrderbookItem",
+    "OrderbookRequest",
+    "RecentTrade",
+    "RecentTrades",
+    "RecentTradesRequest",
+    "ServerStatus",
+    "ServerTime",
+]
