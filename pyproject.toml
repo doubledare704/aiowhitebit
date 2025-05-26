@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "aiowhitebit"
-version = "0.2.1"  # Bumping patch version for bug fixes
+version = "0.2.2"
 description = "Async Python client for WhiteBit API"
 readme = "README.md"
 authors = [
