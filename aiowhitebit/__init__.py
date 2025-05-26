@@ -5,4 +5,4 @@ exchange API, including public and private endpoints, websocket connections, and
 """
 
 # Version information
-__version__ = "0.2.1"
+__version__ = "0.2.2"

@@ -184,7 +184,7 @@ class PrivateV4Client:
         """
         request_path = path
         full_url = self.request_url(request_path)
-        data = data_model.dict(exclude_none=True)
+        data = data_model.model_dump(exclude_none=True)
         data.update({"request": request_path, "nonce": self.gen_nonce()})
         data_json = json.dumps(data, separators=(",", ":"))  # use separators param for deleting spaces
         self.gen_request_payload(data_json)
