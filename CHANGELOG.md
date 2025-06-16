@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.4] - 2025-06-16
+
+### Changed
+- Updated dependencies to latest versions:
+  - aiodns: 3.4.0 → 3.5.0
+  - aiohttp: 3.12.0 → 3.12.13
+  - pytest: 8.3.5 → 8.4.0
+  - pytest-cov: 6.1.1 → 6.2.1
+  - ruff: 0.11.11 → 0.11.13
+- All tests pass with updated dependencies
+
 ## [0.2.1] - 2025-05-03
 
 ### Fixed
