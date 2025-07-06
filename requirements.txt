@@ -1,6 +1,6 @@
 aiodns==3.5.0
 aiohttp==3.12.13
-multidict==6.4.4
+multidict==6.6.3
 pydantic>=2.0.0,<3.0.0
 uvloop==0.21.0
 websocket-client==1.8.0

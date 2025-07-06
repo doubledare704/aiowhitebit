@@ -3,11 +3,6 @@ from aiowhitebit.clients.websocket import (
     ws_subscribe_builder,
 )
 
-# For backward compatibility, you can also use:
-# from aiowhitebit.clients.public_ws_subscriber import (
-#     ws_subscribe_builder,
-#     SubscribeRequest,
-# )
 
 if __name__ == "__main__":
     import threading
