@@ -493,3 +493,29 @@ class MiningPoolOverview(BaseModel):
     data: MiningPoolData
 
     model_config = ConfigDict(frozen=True, extra="ignore")
+
+
+class FundingHistoryItem(BaseModel):
+    """Funding history item model.
+
+    Attributes:
+        timestamp: Timestamp of the funding rate
+        funding_rate: The funding rate value
+    """
+
+    timestamp: int
+    funding_rate: str
+
+    model_config = ConfigDict(frozen=True, extra="ignore")
+
+
+class FundingHistoryResponse(BaseModel):
+    """Funding history response model.
+
+    Attributes:
+        result: List of funding history items
+    """
+
+    result: list[FundingHistoryItem]
+
+    model_config = ConfigDict(frozen=True, extra="ignore")

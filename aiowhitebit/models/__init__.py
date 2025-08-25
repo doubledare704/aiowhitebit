@@ -34,6 +34,10 @@ from aiowhitebit.models.public.v4 import (
     # Add other specific imports from public.v4 module
 )
 from aiowhitebit.models.websocket import (
+    BookTickerData,
+    BookTickerResponse,
+    DepthData,
+    DepthUpdateResponse,
     WSError,
     # Add other specific imports from websocket module
     WSRequest,
@@ -48,8 +52,12 @@ __all__ = [
     "BasePublicV2Response",
     "BaseResponse",
     "BaseWebSocketResponse",
+    "BookTickerData",
+    "BookTickerResponse",
     "CreateLimitOrderRequest",
     "CreateOrderResponse",
+    "DepthData",
+    "DepthUpdateResponse",
     "ExecutedOrdersResponse",
     "MarketActivity",
     "MarketInfo",

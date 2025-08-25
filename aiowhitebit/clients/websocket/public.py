@@ -233,6 +233,40 @@ class PublicWebSocketClient:
         """
         return await self.base_ws_requester(WSRequest(method="depth_request", params=[market, limit, intervals]))
 
+    async def bookticker_subscribe(self, market: str) -> WSResponse:
+        """Subscribe to BookTicker stream for a market.
+
+        Args:
+            market: Market (e.g. BTC_USDT)
+
+        Returns:
+            WebSocket response confirming subscription
+
+        Example:
+            ```python
+            client = PublicWebSocketClient()
+            response = await client.bookticker_subscribe("BTC_USDT")
+            ```
+        """
+        return await self.base_ws_requester(WSRequest(method="bookTicker_subscribe", params=[market]))
+
+    async def bookticker_unsubscribe(self, market: str) -> WSResponse:
+        """Unsubscribe from BookTicker stream for a market.
+
+        Args:
+            market: Market (e.g. BTC_USDT)
+
+        Returns:
+            WebSocket response confirming unsubscription
+
+        Example:
+            ```python
+            client = PublicWebSocketClient()
+            response = await client.bookticker_unsubscribe("BTC_USDT")
+            ```
+        """
+        return await self.base_ws_requester(WSRequest(method="bookTicker_unsubscribe", params=[market]))
+
     async def close(self):
         """Close the WebSocket connection.
 
