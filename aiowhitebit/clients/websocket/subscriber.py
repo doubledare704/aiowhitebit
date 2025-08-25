@@ -151,6 +151,48 @@ class SubscribeRequest:
             id=next(id_gen),
         ).model_dump()
 
+    @staticmethod
+    def bookticker_subscribe(market: str) -> dict:
+        """Build a BookTicker subscribe request.
+
+        Args:
+            market: Market (e.g. BTC_USDT)
+
+        Returns:
+            Subscribe request
+
+        Example:
+            ```python
+            request = SubscribeRequest.bookticker_subscribe("BTC_USDT")
+            ```
+        """
+        return WSRequest(
+            method="bookTicker_subscribe",
+            params=[market],
+            id=next(id_gen),
+        ).model_dump()
+
+    @staticmethod
+    def bookticker_unsubscribe(market: str) -> dict:
+        """Build a BookTicker unsubscribe request.
+
+        Args:
+            market: Market (e.g. BTC_USDT)
+
+        Returns:
+            Unsubscribe request
+
+        Example:
+            ```python
+            request = SubscribeRequest.bookticker_unsubscribe("BTC_USDT")
+            ```
+        """
+        return WSRequest(
+            method="bookTicker_unsubscribe",
+            params=[market],
+            id=next(id_gen),
+        ).model_dump()
+
 
 def ws_subscribe_builder(
     sub_msg: dict,

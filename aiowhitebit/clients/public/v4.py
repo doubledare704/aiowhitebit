@@ -14,6 +14,7 @@ from aiowhitebit.models.public.v4 import (
     Depth,
     Fee,
     FeeResponse,
+    FundingHistoryResponse,
     FuturesMarkets,
     MaintenanceStatus,
     MarketActivity,
@@ -264,3 +265,30 @@ class PublicV4Client(BaseClient):
                 - Recent blocks
         """
         return await self._make_request(APIEndpoints.MINING_POOL, converter=lambda x: MiningPoolOverview(**x))
+
+    @rate_limit(limit=2000, window=10.0)
+    async def get_funding_history(self, market: str) -> FundingHistoryResponse:
+        """Get funding rate history for a futures market.
+
+        Args:
+            market: Market symbol (e.g., "BTC_USDT")
+
+        Returns:
+            FundingHistoryResponse: List of funding rate history items containing:
+                - Timestamp of the funding rate
+                - Funding rate value
+
+        Raises:
+            WhitebitValidationError: If the market parameter is invalid
+
+        Example:
+            ```python
+            client = PublicV4Client()
+            history = await client.get_funding_history("BTC_USDT")
+            for item in history.result:
+                print(f"Time: {item.timestamp}, Rate: {item.funding_rate}")
+            ```
+        """
+        validate_market(market)
+        endpoint = APIEndpoints.FUNDING_HISTORY_V4.format(market=market)
+        return await self._make_request(endpoint, converter=lambda x: FundingHistoryResponse(**x))

@@ -23,6 +23,7 @@ class APIEndpoints:
     DEPTH_V4 = "/api/v4/public/orderbook/depth/{market}"  # Corrected URL
     TRADES_V4 = "/api/v4/public/trades/{market}"
     FEE_V4 = "/api/v4/public/fee"
+    FUNDING_HISTORY_V4 = "/api/v4/public/funding-history/{market}"
 
     # V2 endpoints
     MARKET_INFO_V2: Final = "/api/v2/public/markets"
