@@ -1,6 +1,6 @@
 """Base models for the WhiteBit API."""
 
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel
 
@@ -43,5 +43,5 @@ class BaseWebSocketResponse(BaseModel):
         update_id: Unique identifier for each update (optional for backward compatibility)
     """
 
-    event_time: Optional[int] = None
-    update_id: Optional[int] = None
+    event_time: int | None = None
+    update_id: int | None = None

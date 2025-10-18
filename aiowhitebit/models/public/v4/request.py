@@ -1,7 +1,5 @@
 """Request models for the WhiteBit Public API v4."""
 
-from typing import Optional
-
 from pydantic import BaseModel, ConfigDict, field_validator
 
 
@@ -17,8 +15,8 @@ class OrderbookRequest(BaseModel):
     """
 
     market: str
-    limit: Optional[int] = None
-    level: Optional[int] = None
+    limit: int | None = None
+    level: int | None = None
 
     model_config = ConfigDict(frozen=True)
 
@@ -86,7 +84,7 @@ class RecentTradesRequest(BaseModel):
     """
 
     market: str
-    type: Optional[str] = None
+    type: str | None = None
 
     model_config = ConfigDict(frozen=True)
 

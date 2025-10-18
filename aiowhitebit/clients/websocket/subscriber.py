@@ -2,8 +2,9 @@
 
 import json
 import pprint
+from collections.abc import Callable
 from datetime import datetime
-from typing import Any, Callable, Optional, TypeVar
+from typing import Any, TypeVar
 
 import websocket
 
@@ -196,9 +197,9 @@ class SubscribeRequest:
 
 def ws_subscribe_builder(
     sub_msg: dict,
-    on_message_callback: Optional[WSCallback] = None,
-    on_open_callback: Optional[WSCallback] = None,
-    on_close_callback: Optional[WSCallback] = None,
+    on_message_callback: WSCallback | None = None,
+    on_open_callback: WSCallback | None = None,
+    on_close_callback: WSCallback | None = None,
 ) -> None:
     """Build a WebSocket subscriber.
 

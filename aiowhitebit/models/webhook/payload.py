@@ -8,7 +8,7 @@ __all__ = [
     "WebhookRequest",
 ]
 
-from typing import Any, Optional, Union
+from typing import Any
 
 from pydantic import BaseModel, field_validator
 
@@ -20,7 +20,7 @@ class WebhookParams(BaseModel):
         nonce: A number that is always greater than the previous request's nonce number
     """
 
-    nonce: Optional[int] = None
+    nonce: int | None = None
 
 
 class CodeApplyParams(WebhookParams):
@@ -69,16 +69,16 @@ class TransactionParams(WebhookParams):
     amount: str
     createdAt: int
     currency: str
-    description: Optional[str] = None
+    description: str | None = None
     fee: str
     memo: str = ""
-    method: Optional[int] = None
-    network: Optional[str] = None
-    status: Optional[int] = None
+    method: int | None = None
+    network: str | None = None
+    status: int | None = None
     ticker: str
     transactionHash: str
-    uniqueId: Optional[str] = None
-    confirmations: Optional[ConfirmationsInfo] = None
+    uniqueId: str | None = None
+    confirmations: ConfirmationsInfo | None = None
 
     @field_validator("method")
     @classmethod
@@ -109,7 +109,7 @@ class WebhookRequest(BaseModel):
     """
 
     method: str
-    params: Union[WebhookParams, CodeApplyParams, TransactionParams, dict[str, Any]]
+    params: WebhookParams | CodeApplyParams | TransactionParams | dict[str, Any]
     id: str
 
     @field_validator("params", mode="before")

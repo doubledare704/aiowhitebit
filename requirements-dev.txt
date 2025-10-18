@@ -3,13 +3,13 @@
 # Build tools
 build==1.3.0
 pre-commit==4.3.0
-pyright==1.1.404
+pyright==1.1.406
 
 # Testing
-pytest==8.4.1
-pytest-asyncio==1.1.0
-pytest-cov==6.2.1
+pytest==8.4.2
+pytest-asyncio==1.2.0
+pytest-cov==7.0.0
 
 # Code Quality
-ruff==0.12.10
-twine==6.1.0
+ruff==0.14.1
+twine==6.2.0

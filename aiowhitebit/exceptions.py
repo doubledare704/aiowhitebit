@@ -2,7 +2,7 @@
 
 import logging
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any
 
 from aiowhitebit.constants import KNOWN_ERRORS
 
@@ -17,13 +17,13 @@ class ErrorDetails:
 
     code: int
     message: str
-    data: Optional[Any] = None
+    data: Any | None = None
 
 
 class WhitebitError(Exception):
     """Base exception for WhiteBit API."""
 
-    def __init__(self, message: str, details: Optional[ErrorDetails] = None):
+    def __init__(self, message: str, details: ErrorDetails | None = None):
         """Initialize the base exception.
 
         Args:
@@ -37,7 +37,7 @@ class WhitebitError(Exception):
 class WhitebitAPIError(WhitebitError):
     """API-specific errors."""
 
-    def __init__(self, code: int, message: str, data: Optional[Any] = None):
+    def __init__(self, code: int, message: str, data: Any | None = None):
         """Initialize the API error.
 
         Args:

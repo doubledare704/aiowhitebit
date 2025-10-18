@@ -166,7 +166,7 @@ class TestWebhookDataLoader:
         req = WebhookRequest(id="123", method="unknown.method", params={})
 
         # Test handling the request with no handler
-        with pytest.raises(ValueError, match="No handler registered for method: unknown.method"):
+        with pytest.raises(ValueError, match=r"No handler registered for method: unknown.method"):
             webhook_loader.handle_request(req)
 
     @patch("logging.info")

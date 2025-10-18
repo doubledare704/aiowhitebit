@@ -10,7 +10,8 @@ import hashlib
 import hmac
 import json
 import logging
-from typing import Any, Callable, Optional
+from collections.abc import Callable
+from typing import Any
 
 from multidict import CIMultiDictProxy
 
@@ -40,7 +41,7 @@ class WebhookDataLoader:
             "X-TXC-PAYLOAD",
             "X-TXC-SIGNATURE",
         ]
-        self.current_request: Optional[WebhookRequest] = None
+        self.current_request: WebhookRequest | None = None
         self._handlers: dict[str, Callable[[WebhookRequest], Any]] = {}
 
         # Register default handlers

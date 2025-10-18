@@ -1,8 +1,7 @@
 """Tests for BookTicker WebSocket functionality."""
 
-import json
 import unittest
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock
 
 import pytest
 
@@ -20,7 +19,7 @@ class TestBookTickerWebSocket(unittest.TestCase):
     def test_bookticker_subscribe_request(self):
         """Test BookTicker subscribe request generation."""
         request = SubscribeRequest.bookticker_subscribe("BTC_USDT")
-        
+
         assert request["method"] == "bookTicker_subscribe"
         assert request["params"] == ["BTC_USDT"]
         assert "id" in request
@@ -29,7 +28,7 @@ class TestBookTickerWebSocket(unittest.TestCase):
     def test_bookticker_unsubscribe_request(self):
         """Test BookTicker unsubscribe request generation."""
         request = SubscribeRequest.bookticker_unsubscribe("BTC_USDT")
-        
+
         assert request["method"] == "bookTicker_unsubscribe"
         assert request["params"] == ["BTC_USDT"]
         assert "id" in request
@@ -46,11 +45,11 @@ class TestBookTickerModels:
             "bid_price": "45000.00",
             "bid_qty": "0.5",
             "ask_price": "45001.00",
-            "ask_qty": "0.3"
+            "ask_qty": "0.3",
         }
-        
+
         bookticker = BookTickerData(**data)
-        
+
         assert bookticker.symbol == "BTC_USDT"
         assert bookticker.bid_price == "45000.00"
         assert bookticker.bid_qty == "0.5"
@@ -66,14 +65,14 @@ class TestBookTickerModels:
                 "bid_price": "45000.00",
                 "bid_qty": "0.5",
                 "ask_price": "45001.00",
-                "ask_qty": "0.3"
+                "ask_qty": "0.3",
             },
             "event_time": 1640995200000,
-            "update_id": 12345
+            "update_id": 12345,
         }
-        
+
         response = BookTickerResponse(**data)
-        
+
         assert response.method == "bookTicker_update"
         assert response.params.symbol == "BTC_USDT"
         assert response.event_time == 1640995200000
@@ -88,12 +87,12 @@ class TestBookTickerModels:
                 "bid_price": "45000.00",
                 "bid_qty": "0.5",
                 "ask_price": "45001.00",
-                "ask_qty": "0.3"
-            }
+                "ask_qty": "0.3",
+            },
         }
-        
+
         response = BookTickerResponse(**data)
-        
+
         assert response.method == "bookTicker_update"
         assert response.params.symbol == "BTC_USDT"
         assert response.event_time is None
@@ -108,11 +107,7 @@ class TestBookTickerWebSocketClient:
         """Test BookTicker subscribe method."""
         # Create a mock WebSocket client
         mock_ws = AsyncMock()
-        mock_response = {
-            "id": 123,
-            "result": {"status": "subscribed"},
-            "error": None
-        }
+        mock_response = {"id": 123, "result": {"status": "subscribed"}, "error": None}
         mock_ws.send_message.return_value = mock_response
 
         client = PublicWebSocketClient(ws=mock_ws)
@@ -133,11 +128,7 @@ class TestBookTickerWebSocketClient:
         """Test BookTicker unsubscribe method."""
         # Create a mock WebSocket client
         mock_ws = AsyncMock()
-        mock_response = {
-            "id": 124,
-            "result": {"status": "unsubscribed"},
-            "error": None
-        }
+        mock_response = {"id": 124, "result": {"status": "unsubscribed"}, "error": None}
         mock_ws.send_message.return_value = mock_response
 
         client = PublicWebSocketClient(ws=mock_ws)

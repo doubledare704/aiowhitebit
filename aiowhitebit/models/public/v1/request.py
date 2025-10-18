@@ -1,6 +1,6 @@
 """Request models for the WhiteBit Public API v1."""
 
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, field_validator
 
@@ -20,7 +20,7 @@ class KlineRequest(BaseModel):
     start: int
     end: int
     interval: int
-    limit: Optional[int] = None
+    limit: int | None = None
 
     @field_validator("market")
     @classmethod
@@ -87,7 +87,7 @@ class OrderDepthRequest(BaseModel):
     """
 
     market: str
-    limit: Optional[int] = None
+    limit: int | None = None
 
     @field_validator("market")
     @classmethod
@@ -136,8 +136,8 @@ class TradeHistoryRequest(BaseModel):
     """
 
     market: str
-    lastId: Optional[int] = None
-    limit: Optional[int] = None
+    lastId: int | None = None
+    limit: int | None = None
 
     @field_validator("market")
     @classmethod

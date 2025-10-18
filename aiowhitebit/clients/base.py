@@ -1,7 +1,8 @@
 """Base client functionality for the WhiteBit API."""
 
 from asyncio import Semaphore
-from typing import Any, Callable, Optional, TypeVar
+from collections.abc import Callable
+from typing import Any, TypeVar
 
 import aiohttp
 
@@ -23,7 +24,7 @@ class HTTPClient:
 
         Sets up an empty session and default rate limiter.
         """
-        self._session: Optional[aiohttp.ClientSession] = None
+        self._session: aiohttp.ClientSession | None = None
         self._rate_limiter = Semaphore(100)  # Default rate limit
 
     @property
@@ -97,7 +98,7 @@ class BaseClient(HTTPClient):
         """
         return f"{self.base_url}{path}"
 
-    async def _make_request(self, path: str, converter: Optional[Callable[[dict], T]] = None) -> T:
+    async def _make_request(self, path: str, converter: Callable[[dict], T] | None = None) -> T:
         full_url = self.request_url(path)
         json_obj = await self.get(full_url)
         return converter(json_obj) if converter else json_obj

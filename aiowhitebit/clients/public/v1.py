@@ -1,7 +1,5 @@
 """WhiteBit Public API v1 client."""
 
-from typing import Optional
-
 from aiowhitebit.clients.base import BaseClient
 from aiowhitebit.config import APIEndpoints
 from aiowhitebit.converters.public import (
@@ -58,10 +56,10 @@ class PublicV1Client(BaseClient):
     async def get_kline_market(
         self,
         market: str,
-        start: Optional[int] = None,
-        end: Optional[int] = None,
-        interval: Optional[str] = None,
-        limit: Optional[int] = None,
+        start: int | None = None,
+        end: int | None = None,
+        interval: str | None = None,
+        limit: int | None = None,
     ) -> Kline:
         """Get kline data for the requested market."""
         validate_market(market)
@@ -102,7 +100,7 @@ class PublicV1Client(BaseClient):
         return await self._make_request(APIEndpoints.SYMBOLS_V1, converter=lambda x: Symbols(**x))
 
     @rate_limit(limit=1000, window=10.0)
-    async def get_order_depth(self, market: str, limit: Optional[int] = None) -> OrderDepth:
+    async def get_order_depth(self, market: str, limit: int | None = None) -> OrderDepth:
         """Get order book for the requested market.
 
         Args:
@@ -128,7 +126,7 @@ class PublicV1Client(BaseClient):
 
     @rate_limit(limit=1000, window=10.0)
     async def get_trade_history(
-        self, market: str, last_id: Optional[int] = None, limit: Optional[int] = None
+        self, market: str, last_id: int | None = None, limit: int | None = None
     ) -> TradeHistory:
         """Get trade history for the requested market."""
         validate_market(market)
