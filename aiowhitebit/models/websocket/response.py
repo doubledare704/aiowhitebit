@@ -1,6 +1,6 @@
 """Response models for the WhiteBit WebSocket API."""
 
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel
 
@@ -30,4 +30,4 @@ class WSResponse(BaseWebSocketResponse):
 
     id: int
     result: Any
-    error: Optional[WSError] = None
+    error: WSError | None = None

@@ -2,7 +2,7 @@
 
 import json
 import logging
-from typing import Any, Optional
+from typing import Any
 
 import websockets
 
@@ -23,7 +23,7 @@ class BaseWebSocketClient:
             uri: WebSocket URI
         """
         self.uri = uri
-        self.connection: Optional[Any] = None
+        self.connection: Any | None = None
 
     async def connect(self):
         """Connect to the WebSocket server.
@@ -69,7 +69,7 @@ class PublicWebSocketClient:
     This client provides methods to interact with the WhiteBit Public WebSocket API.
     """
 
-    def __init__(self, ws: Optional[BaseWebSocketClient] = None) -> None:
+    def __init__(self, ws: BaseWebSocketClient | None = None) -> None:
         """Initialize the WhiteBit Public WebSocket API client.
 
         Args:

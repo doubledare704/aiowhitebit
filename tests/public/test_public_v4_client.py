@@ -248,8 +248,8 @@ class TestPublicV4ClientAsync:
         except Exception as e:
             # If the endpoint is not available or market format is wrong,
             # we'll skip this test but ensure the method exists and is callable
-            assert hasattr(client, 'get_funding_history')
-            assert callable(getattr(client, 'get_funding_history'))
+            assert hasattr(client, "get_funding_history")
+            assert callable(client.get_funding_history)
             # Re-raise if it's not a known API error
             if "Market is not available" not in str(e) and "422" not in str(e):
                 raise

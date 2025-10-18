@@ -1,7 +1,5 @@
 """WhiteBit Public API v4 client."""
 
-from typing import Optional, Union
-
 from aiowhitebit.clients.base import BaseClient
 from aiowhitebit.config import APIEndpoints
 from aiowhitebit.converters.public import (
@@ -60,7 +58,7 @@ class PublicV4Client(BaseClient):
         return await self._make_request(APIEndpoints.MAINTENANCE_STATUS, converter=lambda x: MaintenanceStatus(**x))
 
     @rate_limit(limit=2000, window=10.0)
-    async def get_orderbook(self, market: str, limit: Optional[int] = None, level: Optional[int] = None) -> Orderbook:
+    async def get_orderbook(self, market: str, limit: int | None = None, level: int | None = None) -> Orderbook:
         """Get orderbook for specific market.
 
         Args:
@@ -117,7 +115,7 @@ class PublicV4Client(BaseClient):
         return await self._make_request(url, converter=lambda x: Depth(**x))
 
     @rate_limit(limit=2000, window=10.0)
-    async def get_recent_trades(self, market: str, trade_type: Optional[str] = None) -> RecentTrades:
+    async def get_recent_trades(self, market: str, trade_type: str | None = None) -> RecentTrades:
         """Get recent trades for specific market.
 
         Args:
@@ -149,7 +147,7 @@ class PublicV4Client(BaseClient):
             FeeResponse: Dictionary mapping currency tickers to their fee information
         """
 
-        def convert_fee_details(details) -> Union[FeeDetails, dict[str, FeeDetails]]:
+        def convert_fee_details(details) -> FeeDetails | dict[str, FeeDetails]:
             if not details:  # Handle empty dictionaries
                 return FeeDetails(min_amount="0", max_amount="0", fixed=None, flex=None)
 

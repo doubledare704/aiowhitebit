@@ -5,7 +5,7 @@ import hashlib
 import hmac
 import json
 import time
-from typing import Callable, Optional, Union
+from collections.abc import Callable
 
 import aiohttp
 from pydantic import BaseModel
@@ -66,8 +66,8 @@ class PrivateV4Client:
         self.api_key = api_key
         self.secret_key = secret_key
         self.base_url = base_url
-        self.payload: Optional[bytes] = None
-        self.signature: Optional[str] = None
+        self.payload: bytes | None = None
+        self.signature: str | None = None
         self.session = None
 
     def gen_nonce(self) -> str:
@@ -125,8 +125,8 @@ class PrivateV4Client:
 
     async def get_trading_balance(
         self,
-        ticker: Optional[str] = None,
-    ) -> Union[TradingBalanceItem, TradingBalanceList]:
+        ticker: str | None = None,
+    ) -> TradingBalanceItem | TradingBalanceList:
         """Get trading balance for all or a specific currency.
 
         Args:
@@ -161,14 +161,14 @@ class PrivateV4Client:
         path: str,
         data_model: BaseModel,
         converter: Callable,
-    ) -> Union[
-        CreateOrderResponse,
-        CancelOrderResponse,
-        list[CreateOrderResponse],
-        ExecutedOrdersResponse,
-        ExecutedDealsResponse,
-        ExecutedOrdersByMarketResponse,
-    ]:
+    ) -> (
+        CreateOrderResponse
+        | CancelOrderResponse
+        | list[CreateOrderResponse]
+        | ExecutedOrdersResponse
+        | ExecutedDealsResponse
+        | ExecutedOrdersByMarketResponse
+    ):
         """Base method for creating orders.
 
         Args:

@@ -1,6 +1,6 @@
 """Response models for the WhiteBit Public API v4."""
 
-from typing import Any, Optional, Union
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -14,7 +14,7 @@ class MaintenanceStatus(BaseModel):
         status: 1 - system operational, 0 - system maintenance
     """
 
-    status: Union[str, int]
+    status: str | int
 
     model_config = ConfigDict(frozen=True, extra="ignore")
 
@@ -133,9 +133,9 @@ class Limits(BaseModel):
 class Networks(BaseModel):
     """Networks model for v4 API."""
 
-    default: Optional[str] = None  # e.g. "ERC20"
-    deposits: Optional[list[str]] = []  # e.g. ["ERC20"]
-    withdraws: Optional[list[str]] = []  # e.g. ["ERC20"]
+    default: str | None = None  # e.g. "ERC20"
+    deposits: list[str] | None = []  # e.g. ["ERC20"]
+    withdraws: list[str] | None = []  # e.g. ["ERC20"]
 
     model_config = ConfigDict(frozen=True, extra="ignore")
 
@@ -157,8 +157,8 @@ class Asset(BaseModel):
     is_memo: bool  # e.g. False
     networks: Networks
     limits: dict[str, dict[str, dict[str, str]]]  # Nested dict for limits structure
-    confirmations: Optional[dict[str, int]] = {}  # e.g. {"ERC20": 32}
-    providers: Optional[dict[str, list[str]]] = None
+    confirmations: dict[str, int] | None = {}  # e.g. {"ERC20": 32}
+    providers: dict[str, list[str]] | None = None
 
     model_config = ConfigDict(frozen=True, extra="ignore")
 
@@ -275,14 +275,14 @@ class FeeDetails(BaseModel):
 
     min_amount: str
     max_amount: str
-    fixed: Optional[str] = None
-    flex: Optional[FeeFlex] = None
-    is_depositable: Optional[bool] = None
-    is_withdrawal: Optional[bool] = None
-    is_api_withdrawal: Optional[bool] = None
-    is_api_depositable: Optional[bool] = None
-    name: Optional[str] = None
-    ticker: Optional[str] = None
+    fixed: str | None = None
+    flex: FeeFlex | None = None
+    is_depositable: bool | None = None
+    is_withdrawal: bool | None = None
+    is_api_withdrawal: bool | None = None
+    is_api_depositable: bool | None = None
+    name: str | None = None
+    ticker: str | None = None
 
     model_config = ConfigDict(frozen=True, extra="ignore")
 
@@ -305,8 +305,8 @@ class Fee(BaseModel):
     ticker: str
     name: str
     providers: list[str] = []
-    deposit: Union[FeeDetails, dict[str, FeeDetails]]
-    withdraw: Union[FeeDetails, dict[str, FeeDetails]]
+    deposit: FeeDetails | dict[str, FeeDetails]
+    withdraw: FeeDetails | dict[str, FeeDetails]
     is_depositable: bool
     is_withdrawal: bool
     is_api_withdrawal: bool

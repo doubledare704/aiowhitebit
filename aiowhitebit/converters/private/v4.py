@@ -1,7 +1,5 @@
 """Converters for the WhiteBit Private API v4."""
 
-from typing import Optional, Union
-
 from aiowhitebit.models.private.response import (
     CancelOrderResponse,
     CreateOrderResponse,
@@ -86,8 +84,8 @@ def convert_order_response_to_dto(json_body: dict) -> CreateOrderResponse:
 
 
 def convert_get_trading_balance_to_dto(
-    json_obj: dict, ticker: Optional[str] = None
-) -> Union[TradingBalanceItem, TradingBalanceList]:
+    json_obj: dict, ticker: str | None = None
+) -> TradingBalanceItem | TradingBalanceList:
     """Convert trading balance JSON response to TradingBalanceItem or TradingBalanceList object.
 
     Args:

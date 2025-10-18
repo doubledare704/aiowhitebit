@@ -1,7 +1,7 @@
 """Request models for the WhiteBit Private API."""
 
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, field_validator
 
@@ -33,7 +33,7 @@ class CreateLimitOrderRequest(BaseModel):
     side: OrderType
     amount: str
     price: str
-    clientOrderId: Optional[str] = None
+    clientOrderId: str | None = None
 
     @field_validator("market", "amount", "price")
     @classmethod
@@ -67,7 +67,7 @@ class CreateStockMarketOrderRequest(BaseModel):
     market: str
     side: OrderType
     amount: str
-    clientOrderId: Optional[str] = None
+    clientOrderId: str | None = None
 
     @field_validator("market", "amount")
     @classmethod
@@ -105,7 +105,7 @@ class CreateStopLimitOrderRequest(BaseModel):
     amount: str
     price: str
     activation_price: str
-    clientOrderId: Optional[str] = None
+    clientOrderId: str | None = None
 
     @field_validator("market", "amount", "price", "activation_price")
     @classmethod
@@ -141,7 +141,7 @@ class CreateStopMarketOrderRequest(BaseModel):
     side: OrderType
     amount: str
     activation_price: str
-    clientOrderId: Optional[str] = None
+    clientOrderId: str | None = None
 
     @field_validator("market", "amount", "activation_price")
     @classmethod
@@ -220,8 +220,8 @@ class ActiveOrdersRequest(BaseModel):
     """
 
     market: str
-    limit: Optional[int] = None
-    offset: Optional[int] = None
+    limit: int | None = None
+    offset: int | None = None
 
     @field_validator("market")
     @classmethod
@@ -287,7 +287,7 @@ class ExecutedOrderHistoryRequest(ActiveOrdersRequest):
         offset: Offset (default: 0, min: 0, max: 10000)
     """
 
-    market: Optional[str] = None
+    market: str | None = None
 
     @field_validator("market")
     @classmethod
@@ -314,8 +314,8 @@ class ExecutedOrderDealsRequest(BaseModel):
     """
 
     orderId: int
-    limit: Optional[int] = None
-    offset: Optional[int] = None
+    limit: int | None = None
+    offset: int | None = None
 
     @field_validator("orderId")
     @classmethod
